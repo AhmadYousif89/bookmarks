@@ -1,10 +1,10 @@
-import z from "zod";
+import { z } from "zod";
 import { FieldProps } from "./types";
 
 export const SIGNIN_FIELDS: FieldProps[] = [
   { label: "Email", type: "email", name: "email" },
   { label: "Password", type: "password", name: "password" },
-] as const;
+];
 
 export const SignInSchema = z.object({
   email: z
@@ -24,14 +24,9 @@ export type SignInData = z.infer<typeof SignInSchema>;
 // Sign Up
 
 export const SIGNUP_FIELDS: FieldProps[] = [
-  { label: "Name", type: "text", name: "name" },
+  { label: "Full name", type: "text", name: "name" },
   { label: "Email", type: "email", name: "email" },
-  {
-    label: "Create Password",
-    type: "password",
-    name: "password",
-    hint: "Passwords must be at least 8 characters",
-  },
+  { label: "Password", type: "password", name: "password" },
 ];
 
 export const SignUpSchema = z.object({
@@ -70,9 +65,9 @@ export type ForgetPasswordData = z.infer<typeof ForgetPasswordSchema>;
 // Reset Password
 
 export const RESET_FIELDS: FieldProps[] = [
-  { label: "New Password", type: "password", name: "newPassword" },
-  { label: "Confirm Password", type: "password", name: "confirmPassword" },
-] as const;
+  { label: "New password", type: "password", name: "newPassword" },
+  { label: "Confirm password", name: "confirmPassword", type: "password" },
+];
 
 export const ResetPasswordSchema = z
   .object({
@@ -82,10 +77,15 @@ export const ResetPasswordSchema = z
       .min(1, "Password cannot be empty")
       .min(8, "Passwords must be at least 8 characters")
       .max(30, "Password must be at most 30 characters"),
-    confirmPassword: z.string().trim().min(1, "Please confirm your password"),
+    confirmPassword: z
+      .string()
+      .trim()
+      .min(1, "Please confirm your password")
+      .min(8, "Passwords must be at least 8 characters"),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: "Passwords do not match",
+    path: ["confirmPassword"],
   });
 
 export type ResetPasswordData = z.infer<typeof ResetPasswordSchema>;
