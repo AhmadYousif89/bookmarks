@@ -1,30 +1,51 @@
-import 'server-only';
+import "server-only";
 
-import { betterAuth } from 'better-auth';
-import { nextCookies } from 'better-auth/next-js';
-import { mongodbAdapter } from 'better-auth/adapters/mongodb';
-import connectToDatabase from '@/lib/db';
+import { betterAuth } from "better-auth";
+import { nextCookies } from "better-auth/next-js";
+import { mongodbAdapter } from "better-auth/adapters/mongodb";
+
+import connectToDatabase from "@/lib/db";
+import { sendEmail } from "../email/send.mail";
 
 const TEST_EXPIRES_IN = 2 * 60 * 60;
 const PROD_EXPIRES_IN = 12 * 60 * 60; // 12 hours
 
 const trustedOrigins = (request: Request) => {
-  const origin = request.headers.get('origin');
+  const origin = request.headers.get("origin");
   const localIpPattern = /^http:\/\/192\.168\.\d+\.\d+:3000$/;
-  const devOrigins = ['http://localhost:3000'];
+  const devOrigins = ["http://localhost:3000"];
 
   if (origin && localIpPattern.test(origin)) devOrigins.push(origin);
 
-  return process.env.NODE_ENV === 'development' ? devOrigins : [process.env.BETTER_AUTH_URL!];
+  return process.env.NODE_ENV === "development" ? devOrigins : [process.env.BETTER_AUTH_URL!];
 };
+
+const APP_BASE_URL =
+  process.env.NODE_ENV !== "development" ? process.env.BETTER_AUTH_URL : "http://localhost:3000";
 
 const { db, client } = await connectToDatabase();
 export const auth = betterAuth({
-  appName: 'Personal Finance App',
-  baseURL:
-    process.env.NODE_ENV !== 'development' ? process.env.BETTER_AUTH_URL : 'http://localhost:3000',
+  appName: "Personal Finance App",
+  baseURL: APP_BASE_URL,
   secret: process.env.BETTER_AUTH_SECRET,
   trustedOrigins,
+  emailVerification: {
+    sendOnSignUp: true,
+    expiresIn: 1 * 60 * 60, // 1 hour
+    autoSignInAfterVerification: true,
+    sendVerificationEmail: async ({ user, url }) => {
+      const callbackPath = process.env.BETTER_AUTH_CALLBACK_URL ?? `${APP_BASE_URL}/dashboard`;
+      try {
+        const u = new URL(url);
+        u.searchParams.set("callbackURL", callbackPath);
+        await sendEmail(user, u.toString());
+      } catch (err) {
+        // fallback to original url if parsing fails
+        await sendEmail(user, url);
+      }
+    },
+  },
+  emailAndPassword: { enabled: true, autoSignIn: false, requireEmailVerification: true },
   user: {
     deleteUser: { enabled: true },
   },
@@ -33,11 +54,10 @@ export const auth = betterAuth({
       enabled: true,
       maxAge: 60,
     },
-    expiresIn: process.env.NODE_ENV === 'production' ? PROD_EXPIRES_IN : TEST_EXPIRES_IN,
+    expiresIn: process.env.NODE_ENV === "production" ? PROD_EXPIRES_IN : TEST_EXPIRES_IN,
     freshAge: 15 * 60, // 15 minutes
     updateAge: 15 * 60, // 15 minutes
   },
-  emailAndPassword: { enabled: true },
   database: mongodbAdapter(db, { client, usePlural: true }),
   plugins: [nextCookies()],
 });

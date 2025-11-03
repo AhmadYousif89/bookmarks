@@ -12,6 +12,7 @@ export type FieldErrors = Record<FieldNames, string>;
 export type FormState = {
   success: boolean;
   error?: FieldErrors | string | { [x: string]: string };
+  message?: string;
 };
 
 export type FormDataRecord = Record<FieldNames, string>;

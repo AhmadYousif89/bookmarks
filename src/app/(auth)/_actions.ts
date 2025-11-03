@@ -11,9 +11,8 @@ import {
 } from "./lib/schema";
 import { auth } from "./lib/auth";
 import { headers } from "next/headers";
-import { FormState } from "./lib/types";
 
-export const signInAction = async (prevState: FormState, formData: FormData) => {
+export const signInAction = async (formData: FormData) => {
   const rawData = {
     email: formData.get("email") as string,
     password: formData.get("password") as string,
@@ -44,7 +43,7 @@ export const signInAction = async (prevState: FormState, formData: FormData) => 
   }
 };
 
-export const signUpAction = async (prevState: FormState, formData: FormData) => {
+export const signUpAction = async (formData: FormData) => {
   const rawData = {
     name: formData.get("name") as string,
     email: formData.get("email") as string,
@@ -68,7 +67,7 @@ export const signUpAction = async (prevState: FormState, formData: FormData) => 
       },
     });
 
-    redirect("/dashboard");
+    return { success: true, message: "Account created successfully. Please verify your email." };
   } catch (err) {
     if (err instanceof BetterAuthError) {
       return { success: false, error: err.message };
@@ -80,7 +79,7 @@ export const signUpAction = async (prevState: FormState, formData: FormData) => 
   }
 };
 
-export const forgetPasswordAction = async (prevState: unknown, formData: FormData) => {
+export const forgetPasswordAction = async (formData: FormData) => {
   const rawData = {
     email: formData.get("email") as string,
   };
@@ -113,7 +112,7 @@ export const forgetPasswordAction = async (prevState: unknown, formData: FormDat
   }
 };
 
-export const resetPasswordAction = async (prevState: unknown, formData: FormData) => {
+export const resetPasswordAction = async (formData: FormData) => {
   const rawData = {
     newPassword: formData.get("newPassword") as string,
     confirmPassword: formData.get("confirmPassword") as string,

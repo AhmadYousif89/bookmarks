@@ -40,7 +40,7 @@ const useAuthForm = () => {
 
 type AuthFormProps = {
   children: ReactNode;
-  action: (state: FormState, data: FormData) => FormState | Promise<FormState>;
+  action: (data: FormData) => FormState | Promise<FormState>;
 };
 
 const initialFormData: FormDataRecord = {
@@ -53,20 +53,18 @@ const initialFormData: FormDataRecord = {
 
 function AuthForm({ children, action }: AuthFormProps) {
   const formDataRef = useRef<Record<FieldNames, string>>(initialFormData);
-
-  const wrappedAction = async (state: FormState, data: FormData) => {
-    formDataRef.current = Object.fromEntries(data.entries()) as FormDataRecord;
-    return await action(state, data);
-  };
-
-  const [state, actionFn, isPending] = useActionState(wrappedAction, { success: false });
+  const [state, actionFn, isPending] = useActionState(
+    (state: FormState, data: FormData) => {
+      formDataRef.current = Object.fromEntries(data.entries()) as FormDataRecord;
+      return action(data);
+    },
+    { success: false },
+  );
   const ctxValue = useMemo(() => ({ state, isPending, formDataRef }), [state, isPending]);
-
   // Render Toast for non-field errors
   useEffect(() => {
-    const message = typeof state.error === "string" ? state.error : undefined;
-    if (!message) return;
-    toastAction(message);
+    if (state.error && typeof state.error === "string") toastAction(state.error);
+    if (state.message) toastAction({ label: state.message, type: "success", icon: "check" });
   }, [state]);
 
   return (
@@ -124,7 +122,7 @@ function AuthField({ label, type, onChange, ...props }: AuthFieldProps) {
   };
 
   return (
-    <FieldSet>
+    <FieldSet disabled={isPending}>
       <Field className="gap-1.5 *:[label]:w-fit">
         <FieldLabel htmlFor={props.name} className="text-foreground gap-0.5 text-sm font-semibold">
           {label}
@@ -184,10 +182,14 @@ function AuthField({ label, type, onChange, ...props }: AuthFieldProps) {
 
 function SubmitButton({ children, isSubmitting }: { children: ReactNode; isSubmitting?: boolean }) {
   const { isPending } = useAuthForm();
-  const submitting = isSubmitting || isPending;
 
   return (
-    <ActionButton type="submit" className="w-full" disabled={submitting}>
+    <ActionButton
+      type="submit"
+      className="w-full"
+      disabled={isPending}
+      isPending={isPending || isSubmitting}
+    >
       {children}
     </ActionButton>
   );
