@@ -1,8 +1,14 @@
+import { Metadata } from "next";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { SignInForm } from "../_components/sign-in";
 import { CardTitle, CardDescription, CardHeader, CardFooter } from "@/components/ui/card";
+
+export const metadata: Metadata = {
+  title: "Sign In - Bookmark Manager",
+  description: "Log in to your account to access and manage your bookmarks.",
+};
 
 export default function SignInPage() {
   return (

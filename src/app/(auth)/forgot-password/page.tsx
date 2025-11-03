@@ -1,8 +1,14 @@
+import { Metadata } from "next";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { ForgotPasswordForm } from "../_components/forget-password";
+import { CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+
+export const metadata: Metadata = {
+  title: "Forgot Password - Bookmark Manager",
+  description: "Reset your password by entering your email address.",
+};
 
 export default function ForgotPasswordPage() {
   return (

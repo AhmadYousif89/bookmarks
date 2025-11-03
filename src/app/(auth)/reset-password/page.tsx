@@ -1,8 +1,14 @@
+import { Metadata } from "next";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { ResetPasswordForm } from "../_components/reset-password";
 import { CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+
+export const metadata: Metadata = {
+  title: "Reset Password - Bookmark Manager",
+  description: "Reset your password to regain access to your account.",
+};
 
 export default function ResetPasswordPage() {
   return (

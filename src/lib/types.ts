@@ -1,3 +1,5 @@
+import { ObjectId } from "mongoose";
+
 export type TBookmark = {
   id: string;
   title: string;
@@ -10,4 +12,13 @@ export type TBookmark = {
   visitCount: number;
   createdAt: string;
   lastVisited: string | null;
+};
+
+export type DBColUser = {
+  _id: ObjectId;
+  name: string;
+  email: string;
+  emailVerified: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 };

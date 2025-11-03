@@ -1,8 +1,14 @@
+import { Metadata } from "next";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { SignUpForm } from "../_components/sign-up";
 import { CardTitle, CardDescription, CardHeader, CardFooter } from "@/components/ui/card";
+
+export const metadata: Metadata = {
+  title: "Sign Up - Bookmark Manager",
+  description: "Create an account to start saving and managing your bookmarks.",
+};
 
 export default function SignUpPage() {
   return (
