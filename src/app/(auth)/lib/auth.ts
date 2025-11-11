@@ -6,6 +6,7 @@ import { mongodbAdapter } from "better-auth/adapters/mongodb";
 
 import connectToDatabase from "@/lib/db";
 import { sendEmail } from "../email/send.mail";
+import { sendResetEmail } from "../email/send-reset.email";
 
 const TEST_EXPIRES_IN = 2 * 60 * 60;
 const PROD_EXPIRES_IN = 12 * 60 * 60; // 12 hours
@@ -39,15 +40,34 @@ export const auth = betterAuth({
         const u = new URL(url);
         u.searchParams.set("callbackURL", callbackPath);
         await sendEmail(user, u.toString());
-      } catch (err) {
-        // fallback to original url if parsing fails
+      } catch (e) {
+        console.error("Error constructing verification URL:", e);
         await sendEmail(user, url);
       }
     },
   },
-  emailAndPassword: { enabled: true, autoSignIn: false, requireEmailVerification: true },
+  emailAndPassword: {
+    enabled: true,
+    autoSignIn: false,
+    requireEmailVerification: true,
+    resetPasswordTokenExpiresIn: 10 * 60, // 10 minutes
+    sendResetPassword: async ({ user, url, token }) => {
+      try {
+        const u = new URL(url);
+        u.searchParams.set("token", token);
+        await sendResetEmail(user, u.toString());
+      } catch (e) {
+        console.error("Error constructing reset password URL:", e);
+        await sendResetEmail(user, url);
+      }
+    },
+  },
   user: {
     deleteUser: { enabled: true },
+    additionalFields: {
+      isDemo: { type: "boolean", defaultValue: false, required: false },
+      role: { type: "string", defaultValue: "user", required: false },
+    },
   },
   session: {
     cookieCache: {
