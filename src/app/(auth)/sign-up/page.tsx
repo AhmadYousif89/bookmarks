@@ -21,15 +21,13 @@ export default function SignUpPage() {
         </CardDescription>
       </CardHeader>
       <SignUpForm />
-      <CardFooter>
+      <CardFooter className="self-center">
         <div className="flex items-center justify-center gap-1.5">
           <span className="text-muted-foreground text-sm/normal font-medium">
             Already have an account?
           </span>
-          <Button asChild variant="link">
-            <Link href="/sign-in" className="text-sm">
-              Log in
-            </Link>
+          <Button asChild variant="link" size="auto">
+            <Link href="/sign-in">Log in</Link>
           </Button>
         </div>
       </CardFooter>

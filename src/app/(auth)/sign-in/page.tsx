@@ -23,20 +23,16 @@ export default function SignInPage() {
       <CardFooter className="grid items-center justify-center gap-3">
         <div className="flex items-center justify-center gap-1.5">
           <span className="text-muted-foreground text-sm/normal font-medium">Forgot password?</span>
-          <Button asChild variant="link">
-            <Link href="/forgot-password" className="text-sm">
-              Reset it
-            </Link>
+          <Button asChild variant="link" size="auto">
+            <Link href="/forgot-password">Reset it</Link>
           </Button>
         </div>
         <div className="flex items-center justify-center gap-1.5">
           <span className="text-muted-foreground text-sm/normal font-medium">
             Don't have an account?
           </span>
-          <Button asChild variant="link">
-            <Link href="/sign-up" className="text-sm">
-              Sign up
-            </Link>
+          <Button asChild variant="link" size="auto">
+            <Link href="/sign-up">Sign up</Link>
           </Button>
         </div>
       </CardFooter>

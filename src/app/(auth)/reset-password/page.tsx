@@ -21,7 +21,7 @@ export default function ResetPasswordPage() {
       </CardHeader>
       <ResetPasswordForm />
       <CardFooter className="justify-center">
-        <Button asChild variant="link" className="text-sm/tight font-semibold">
+        <Button asChild variant="link" size="auto">
           <Link href="/sign-in">Back to login</Link>
         </Button>
       </CardFooter>

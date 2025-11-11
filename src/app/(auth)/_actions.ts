@@ -1,5 +1,6 @@
 "use server";
 
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { BetterAuthError } from "better-auth";
 
@@ -10,7 +11,6 @@ import {
   ResetPasswordSchema,
 } from "./lib/schema";
 import { auth } from "./lib/auth";
-import { headers } from "next/headers";
 
 export const signInAction = async (formData: FormData) => {
   const rawData = {
@@ -30,8 +30,6 @@ export const signInAction = async (formData: FormData) => {
       headers: await headers(),
       body: { email: data.email, password: data.password },
     });
-
-    redirect("/dashboard");
   } catch (err) {
     if (err instanceof BetterAuthError) {
       return { success: false, error: err.message };
@@ -41,6 +39,8 @@ export const signInAction = async (formData: FormData) => {
       error: err instanceof Error ? err.message : "Something went wrong. Please try again.",
     };
   }
+
+  redirect("/dashboard");
 };
 
 export const signUpAction = async (formData: FormData) => {
@@ -95,13 +95,20 @@ export const forgetPasswordAction = async (formData: FormData) => {
   }
 
   try {
-    await auth.api.forgetPassword({
+    const res = await auth.api.forgetPassword({
       headers: await headers(),
-      body: { email: data.email },
+      body: {
+        email: data.email,
+        redirectTo: "/reset-password",
+      },
     });
 
-    redirect("/reset-password");
+    return {
+      success: true,
+      error: "message" in res ? (res.message as string) : "Password reset link sent to your email.",
+    };
   } catch (err) {
+    console.log({ err });
     if (err instanceof BetterAuthError) {
       return { success: false, error: err.message };
     }
@@ -112,7 +119,7 @@ export const forgetPasswordAction = async (formData: FormData) => {
   }
 };
 
-export const resetPasswordAction = async (formData: FormData) => {
+export const resetPasswordAction = async (formData: FormData, token: string) => {
   const rawData = {
     newPassword: formData.get("newPassword") as string,
     confirmPassword: formData.get("confirmPassword") as string,
@@ -128,13 +135,17 @@ export const resetPasswordAction = async (formData: FormData) => {
     };
   }
 
+  if (!token) {
+    return { success: false, error: "Invalid or missing token." };
+  }
+
   try {
     await auth.api.resetPassword({
       headers: await headers(),
-      body: { newPassword: data.newPassword },
+      body: { newPassword: data.newPassword, token },
     });
 
-    redirect("/sign-in");
+    return { success: true, message: "Password has been reset successfully. Please sign in." };
   } catch (err) {
     if (err instanceof BetterAuthError) {
       return { success: false, error: err.message };

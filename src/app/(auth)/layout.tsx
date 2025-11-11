@@ -13,7 +13,7 @@ export default async function AuthLayout({ children }: LayoutProps<"/">) {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4">
-      {/* Grid Background */}
+      {/* Grid BG */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div
           className="absolute inset-0 bg-[linear-gradient(to_right,#4C5C5925_1px,transparent_1px),linear-gradient(to_bottom,#4C5C5925_1px,transparent_1px)] bg-size-[30px_30px]"

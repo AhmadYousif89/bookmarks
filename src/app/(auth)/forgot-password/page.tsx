@@ -21,7 +21,7 @@ export default function ForgotPasswordPage() {
       </CardHeader>
       <ForgotPasswordForm />
       <CardFooter className="justify-center">
-        <Button asChild variant="link" className="text-sm/tight font-semibold">
+        <Button asChild variant="link" size="auto">
           <Link href="/sign-in">Back to login</Link>
         </Button>
       </CardFooter>

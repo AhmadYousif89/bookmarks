@@ -41,6 +41,7 @@ const useAuthForm = () => {
 type AuthFormProps = {
   children: ReactNode;
   action: (data: FormData) => FormState | Promise<FormState>;
+  onSuccess?: () => void;
 };
 
 const initialFormData: FormDataRecord = {
@@ -51,7 +52,7 @@ const initialFormData: FormDataRecord = {
   newPassword: "",
 };
 
-function AuthForm({ children, action }: AuthFormProps) {
+function AuthForm({ children, action, onSuccess }: AuthFormProps) {
   const formDataRef = useRef<Record<FieldNames, string>>(initialFormData);
   const [state, actionFn, isPending] = useActionState(
     (state: FormState, data: FormData) => {
@@ -65,7 +66,8 @@ function AuthForm({ children, action }: AuthFormProps) {
   useEffect(() => {
     if (state.error && typeof state.error === "string") toastAction(state.error);
     if (state.message) toastAction({ label: state.message, type: "success", icon: "check" });
-  }, [state]);
+    if (state.success && onSuccess) onSuccess();
+  }, [state, onSuccess]);
 
   return (
     <AuthFormContext.Provider value={ctxValue}>
@@ -95,6 +97,7 @@ function AuthField({ label, type, onChange, ...props }: AuthFieldProps) {
   const isCleared = name ? clearedErrors.has(name) : false;
   const fieldError = !isCleared ? fieldErrors?.[name] : undefined;
   const hasError = Boolean(fieldError);
+  const fieldDefaultValue = formDataRef.current?.[name] || "";
 
   useEffect(() => {
     if (props.autoFocus) {
@@ -144,7 +147,7 @@ function AuthField({ label, type, onChange, ...props }: AuthFieldProps) {
                 name === "email" ? "email" : isPasswordField ? "current-password" : "off"
               }
               aria-describedby={hasError ? `${props.name}-error` : undefined}
-              defaultValue={name ? formDataRef.current[name] : undefined}
+              defaultValue={fieldDefaultValue}
               type={isPasswordField ? (togglePass === "hide" ? "password" : "text") : type}
               {...props}
             />
@@ -153,7 +156,7 @@ function AuthField({ label, type, onChange, ...props }: AuthFieldProps) {
                 <InputGroupButton
                   type="button"
                   variant="ghost"
-                  className="h-full rounded-[px]"
+                  className="h-8 rounded"
                   title={togglePass === "hide" ? "Show password" : "Hide password"}
                   onClick={() => setTogglePass(togglePass === "hide" ? "show" : "hide")}
                   aria-label={togglePass === "hide" ? "Show password" : "Hide password"}
