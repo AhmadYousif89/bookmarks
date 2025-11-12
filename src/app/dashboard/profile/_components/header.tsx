@@ -5,9 +5,11 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSession } from "@/app/(auth)/lib/auth.client";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const ProfileHeader = () => {
   const { data, isPending } = useSession();
+  const isdemo = data?.user.isDemo;
 
   return (
     <Card className="flex-row items-start justify-between gap-4 border-none p-4 shadow-none md:p-6">
@@ -15,7 +17,7 @@ export const ProfileHeader = () => {
         <div className="bg-primary dark:bg-accent flex size-10 items-center justify-center rounded-full">
           <UserIcon className="size-6 text-white" />
         </div>
-        {isPending && !data?.user ? (
+        {isPending ? (
           <div className="space-y-1.5">
             <Skeleton className="h-6 w-40" />
             <Skeleton className="h-4 w-60" />
@@ -27,10 +29,19 @@ export const ProfileHeader = () => {
           </div>
         )}
       </div>
-      {isPending && !data?.user ? (
+      {isPending ? (
         <Skeleton className="h-6 w-14" />
       ) : (
-        <Badge className="dark:bg-muted cursor-default">{data?.user.role}</Badge>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Badge className="dark:bg-muted cursor-default text-center whitespace-normal">
+              {data?.user.role}
+            </Badge>
+          </TooltipTrigger>
+          <TooltipContent showArrow align="end">
+            {isdemo ? "Demo account with limited access." : "Basic account"}
+          </TooltipContent>
+        </Tooltip>
       )}
     </Card>
   );

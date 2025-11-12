@@ -25,9 +25,11 @@ const initialState = {
 export function SecurityTab({ isDemo }: { isDemo: boolean }) {
   const [state, action, pending] = useActionState(updateUserPassword, initialState);
 
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [form, setForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
 
   const getErrorMsg = (field: PasswordField) => {
     return state.errors?.find((error) => error.path === field)?.message;
@@ -35,11 +37,17 @@ export function SecurityTab({ isDemo }: { isDemo: boolean }) {
 
   useEffect(() => {
     if (state.success) {
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
+      setForm({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
     }
   }, [state]);
+
+  const handleInputChange = (field: PasswordField, value: string) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
 
   return (
     <Card className="border-none p-5">
@@ -60,8 +68,8 @@ export function SecurityTab({ isDemo }: { isDemo: boolean }) {
               type="password"
               className="border-border"
               autoComplete="current-password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
+              value={form.currentPassword}
+              onChange={(e) => handleInputChange("currentPassword", e.target.value)}
               aria-invalid={!!getErrorMsg("currentPassword")}
               aria-describedby="currentPassword-error"
             />
@@ -83,8 +91,8 @@ export function SecurityTab({ isDemo }: { isDemo: boolean }) {
               type="password"
               className="border-border"
               autoComplete="new-password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
+              value={form.newPassword}
+              onChange={(e) => handleInputChange("newPassword", e.target.value)}
               aria-invalid={!!getErrorMsg("newPassword")}
               aria-describedby="newPassword-error"
             />
@@ -106,8 +114,8 @@ export function SecurityTab({ isDemo }: { isDemo: boolean }) {
               type="password"
               className="border-border"
               autoComplete="new-password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              value={form.confirmPassword}
+              onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
               aria-invalid={!!getErrorMsg("confirmPassword")}
               aria-describedby="confirmPassword-error"
             />
@@ -123,7 +131,7 @@ export function SecurityTab({ isDemo }: { isDemo: boolean }) {
               Update password
             </ActionButton>
             {state.success && (
-              <p className="text-primary-foreground bg-primary rounded-md px-4 py-2 text-sm font-semibold">
+              <p className="text-muted-foreground dark:text-foreground bg-muted rounded px-4 py-2 text-xs font-medium">
                 {state.message}
               </p>
             )}
