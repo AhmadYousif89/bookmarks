@@ -13,17 +13,6 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main className="flex grow flex-col">
-      {/* Grid BG */}
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div
-          className="absolute inset-0 bg-[linear-gradient(to_right,#4C5C5925_1px,transparent_1px),linear-gradient(to_bottom,#4C5C5925_1px,transparent_1px)] bg-size-[30px_30px]"
-          style={{
-            maskImage: "radial-gradient(ellipse 60% 55% at 50% 55%, #000 50%, transparent 100%)",
-            WebkitMaskImage:
-              "radial-gradient(ellipse 60% 55% at 50% 55%, #000 50%, transparent 100%)",
-          }}
-        />
-      </div>
       <HomeHeader />
       <HeroSection />
       <FeatureSection />

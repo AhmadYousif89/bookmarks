@@ -53,6 +53,7 @@ const initialFormData: FormDataRecord = {
 };
 
 function AuthForm({ children, action, onSuccess }: AuthFormProps) {
+  const shownMessageRef = useRef<string | null>(null);
   const formDataRef = useRef<Record<FieldNames, string>>(initialFormData);
   const [state, actionFn, isPending] = useActionState(
     (state: FormState, data: FormData) => {
@@ -62,10 +63,25 @@ function AuthForm({ children, action, onSuccess }: AuthFormProps) {
     { success: false },
   );
   const ctxValue = useMemo(() => ({ state, isPending, formDataRef }), [state, isPending]);
-  // Render Toast for non-field errors
+
+  // Clear shown message when new submission starts
   useEffect(() => {
-    if (state.error && typeof state.error === "string") toastAction(state.error);
-    if (state.message) toastAction({ label: state.message, type: "success", icon: "check" });
+    if (isPending) shownMessageRef.current = null;
+  }, [isPending]);
+  // Render Toast for non-field errors/messages
+  useEffect(() => {
+    if (state.error && typeof state.error === "string") {
+      if (shownMessageRef.current !== state.error) {
+        toastAction(state.error);
+        shownMessageRef.current = state.error;
+      }
+    }
+    if (state.message) {
+      if (shownMessageRef.current !== state.message) {
+        toastAction({ label: state.message, icon: "check" });
+        shownMessageRef.current = state.message;
+      }
+    }
     if (state.success && onSuccess) onSuccess();
   }, [state, onSuccess]);
 
@@ -136,7 +152,7 @@ function AuthField({ label, type, onChange, ...props }: AuthFieldProps) {
         <InputGroup>
           <div className="flex w-full items-center justify-between">
             <InputGroupInput
-              required={true}
+              required
               ref={inputRef}
               id={props.name}
               disabled={isPending}

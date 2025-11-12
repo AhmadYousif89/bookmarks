@@ -76,15 +76,17 @@ const container = {
 const image = { backgroundColor: "#ffffff", width: "fit-content" };
 
 const paragraph = {
-  fontSize: "16px",
-  lineHeight: "26px",
+  fontSize: "14px",
+  lineHeight: "22px",
 };
 
 const btnContainer = {
+  display: "flex",
   textAlign: "center" as const,
 };
 
 const button = {
+  width: "fit-content",
   backgroundColor: "#5F51E8",
   borderRadius: "3px",
   color: "#fff",
