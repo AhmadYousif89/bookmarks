@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState } from "react";
+import { useState } from "react";
 import { Session } from "better-auth";
 import { UAParser } from "ua-parser-js";
 import { useRouter } from "next/navigation";
@@ -62,7 +62,7 @@ export function SessionsTab({ isDemo, sessions, currentSessionToken }: Props) {
             No other active sessions found.
           </CardDescription>
         ) : (
-          <ScrollArea className="max-h-24 w-full">
+          <ScrollArea className="max-h-25 w-full">
             {otherSessions.map((session) => (
               <SessionCard key={session.token} isDemo={isDemo} session={session} className="mb-1" />
             ))}

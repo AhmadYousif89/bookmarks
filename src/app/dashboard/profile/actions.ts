@@ -77,15 +77,6 @@ export async function updateUserPassword(prevState: unknown, formData: FormData)
       return { success: false, message: null, errors };
     }
 
-    const session = await auth.api.getSession({ headers: await headers() });
-    if (!session?.user) {
-      return {
-        success: false,
-        message: null,
-        errors: [{ path: "currentPassword", message: "User is not authenticated" }],
-      };
-    }
-
     await auth.api.changePassword({
       body: {
         currentPassword: data.currentPassword,
@@ -98,7 +89,6 @@ export async function updateUserPassword(prevState: unknown, formData: FormData)
     return { success: true, message: "Password updated successfully", errors: [] };
   } catch (err) {
     const msg = (err as Error).message || "Failed to update password";
-    // Attach unknown errors to currentPassword by default
     return {
       success: false,
       message: null,

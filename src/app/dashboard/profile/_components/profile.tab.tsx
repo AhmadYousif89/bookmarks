@@ -141,7 +141,7 @@ export function ProfileTab({ user }: { user: Session["user"] }) {
             </ActionButton>
 
             {form.success && (
-              <p className="text-primary-foreground bg-primary rounded-md px-4 py-2 text-sm font-semibold">
+              <p className="text-muted-foreground dark:text-foreground bg-muted rounded px-4 py-2 text-xs font-medium">
                 {form.success}
               </p>
             )}

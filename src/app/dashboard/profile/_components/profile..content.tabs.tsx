@@ -8,8 +8,8 @@ import { ProfileTab } from "./profile.tab";
 import { AccountTab } from "./account.tab";
 import { SecurityTab } from "./security.tab";
 import { SessionsTab } from "./sessions.tsb";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const ProfileContentTabs = async () => {
   const session = await auth.api.getSession({ headers: await headers() });

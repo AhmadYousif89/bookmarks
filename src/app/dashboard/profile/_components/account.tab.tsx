@@ -55,11 +55,12 @@ export function AccountTab({ isDemo }: { isDemo: boolean }) {
           />
         </fieldset>
         <ActionButton
-          showAlert
+          confirm={{
+            description: "This action cannot be undone. All your data will be permanently deleted.",
+          }}
           variant="destructive"
           isPending={isDeleting}
-          alertDescription="This action cannot be undone. All your data will be permanently deleted."
-          performAction={handleUserDelete}
+          onAction={handleUserDelete}
           disabled={isDemo || !confirmText || hasError}
           className="text-sm"
         >
