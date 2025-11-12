@@ -3,7 +3,8 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { ResetPasswordForm } from "../_components/reset-password";
-import { CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { CardHeader, CardTitle, CardDescription, CardFooter, Card } from "@/components/ui/card";
+import { Logo } from "@/components/logo";
 
 export const metadata: Metadata = {
   title: "Reset Password - Bookmark Manager",
@@ -12,7 +13,8 @@ export const metadata: Metadata = {
 
 export default function ResetPasswordPage() {
   return (
-    <>
+    <Card className="w-full max-w-md gap-8 border-none px-5 py-8 sm:px-8 sm:py-10">
+      <Logo />
       <CardHeader className="gap-1.5 px-0">
         <CardTitle className="text-xl font-bold">Reset your password</CardTitle>
         <CardDescription className="leading-normal font-medium tracking-tight">
@@ -25,6 +27,6 @@ export default function ResetPasswordPage() {
           <Link href="/sign-in">Back to login</Link>
         </Button>
       </CardFooter>
-    </>
+    </Card>
   );
 }
