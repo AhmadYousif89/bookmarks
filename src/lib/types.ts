@@ -1,5 +1,3 @@
-import { ObjectId } from "mongoose";
-
 export type TBookmark = {
   id: string;
   title: string;
@@ -10,15 +8,6 @@ export type TBookmark = {
   pinned: boolean;
   isArchived: boolean;
   visitCount: number;
-  createdAt: string;
+  createdAt: string | Date;
   lastVisited: string | null;
-};
-
-export type DBColUser = {
-  _id: ObjectId;
-  name: string;
-  email: string;
-  emailVerified: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 };

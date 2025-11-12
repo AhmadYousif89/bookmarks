@@ -1,10 +1,9 @@
-import mongoose, { InferSchemaType } from "mongoose";
-import { TBookmark } from "./types";
-import { Model } from "mongoose";
+import type { Model } from "mongoose";
+import mongoose, { type InferSchemaType } from "mongoose";
 
 const bookmarkSchema = new mongoose.Schema(
   {
-    userId: { type: String, required: true, index: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, required: true, index: true },
     title: { type: String, required: true },
     url: { type: String, required: true },
     favicon: { type: String, default: "" },
