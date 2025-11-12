@@ -28,6 +28,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${manrope.variable} ${roboto.variable} antialiased`}>
+        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+          <div
+            className="absolute inset-0 bg-[linear-gradient(to_right,#4C5C5920_1px,transparent_1px),linear-gradient(to_bottom,#4C5C5920_1px,transparent_1px)] bg-size-[25px_25px]"
+            style={{
+              maskImage: "radial-gradient(ellipse 50% 55% at 50% 55%, #000 50%, transparent 95%)",
+              WebkitMaskImage:
+                "radial-gradient(ellipse 50% 55% at 50% 55%, #000 50%, transparent 95%)",
+            }}
+          />
+        </div>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
