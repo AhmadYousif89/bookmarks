@@ -22,7 +22,7 @@ export const ProfileContentTabs = async () => {
   return (
     <>
       <Suspense fallback={<Skeleton className="h-18 md:h-23" />}>
-        <ProfileHeader />
+        <ProfileHeader user={user} />
       </Suspense>
 
       <Tabs aria-label="Profile settings tabs" defaultValue="profile" className="gap-0">
