@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { ArrowRight, Bookmark, Check, Sparkles } from "lucide-react";
+
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { SignInDemoUser } from "../actions";
-import { ActionButton } from "@/components/action.button";
 import { StartDemoButton } from "./demo.button";
 
 export const HeroSection = () => {

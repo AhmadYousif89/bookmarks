@@ -7,7 +7,10 @@ import { APIError } from "better-auth";
 
 export async function SignInDemoUser() {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (session) redirect("/dashboard");
+
+  if (session && session.user.isDemo) {
+    redirect("/dashboard");
+  }
 
   try {
     await auth.api.signInEmail({
