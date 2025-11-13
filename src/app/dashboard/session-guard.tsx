@@ -1,18 +1,27 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { getSession, useSession } from "@/app/(auth)/lib/auth.client";
-import { SessionGuardModal } from "./session-guard.modal";
 
 type Props = { children: React.ReactNode };
 
 export function SessionGuard({ children }: Props) {
   const pathname = usePathname();
   const inFlightRef = useRef(false);
+  const [open, setOpenChange] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
-  const [showExpiredModal, setShowExpiredModal] = useState(false);
 
   const { data } = useSession();
 
@@ -26,11 +35,11 @@ export function SessionGuard({ children }: Props) {
       try {
         const session = await getSession();
         if (session.data == null) {
-          setShowExpiredModal(true);
+          setOpenChange(true);
         }
       } catch (err) {
         console.error("Error checking auth status", err);
-        setShowExpiredModal(true); // Assume session expired if error
+        setOpenChange(true); // Assume session expired if error
       } finally {
         inFlightRef.current = false;
       }
@@ -62,7 +71,26 @@ export function SessionGuard({ children }: Props) {
   return (
     <>
       {children}
-      <SessionGuardModal isOpen={showExpiredModal} />
+      <Dialog open={open}>
+        <DialogContent
+          showCloseButton={false}
+          onPointerDownOutside={(e) => e.preventDefault()}
+          onEscapeKeyDown={(e) => e.preventDefault()}
+          className="gap-8"
+        >
+          <DialogHeader>
+            <DialogTitle className="text-lg">Session Expired</DialogTitle>
+            <DialogDescription>
+              Your session has expired. Please sign in again to continue.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button asChild className="h-10.5">
+              <Link href="/sign-in">Sign In</Link>
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { auth } from "../(auth)/lib/auth";
-import { DashboardHeader } from "./header";
+import { DashboardHeader } from "./_components/header";
 import { SessionGuard } from "./session-guard";
 import { DashboardProvider } from "./dashboard.context";
 import { SideSheet } from "./_components/sidebar/side.sheet";
