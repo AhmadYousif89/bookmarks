@@ -11,8 +11,7 @@ export const authClient = createAuthClient({
 export type Session = typeof authClient.$Infer.Session;
 export const useSession = () => authClient.useSession();
 export const getSession = async () => await authClient.getSession();
-export const getSessions = async () =>
-  await authClient.listSessions({ fetchOptions: { credentials: "include" } });
+export const getSessions = async () => await authClient.listSessions();
 export const signOut = () =>
   authClient.signOut({
     fetchOptions: {

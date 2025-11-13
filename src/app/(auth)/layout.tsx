@@ -5,7 +5,7 @@ import { auth } from "./lib/auth";
 
 export default async function AuthLayout({ children }: LayoutProps<"/">) {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (session) {
+  if (session && session.user.isDemo === false) {
     redirect("/dashboard");
   }
 

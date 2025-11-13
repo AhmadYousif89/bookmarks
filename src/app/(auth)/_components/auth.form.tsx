@@ -21,6 +21,8 @@ import { ActionButton } from "@/components/action.button";
 import { Field, FieldError, FieldLabel, FieldSet } from "@/components/ui/field";
 import { FieldErrors, FieldNames, FieldProps, FormDataRecord, FormState } from "../lib/types";
 import { toastAction } from "@/app/dashboard/_components/toast-action";
+import { authClient } from "../lib/auth.client";
+import { Button } from "@/components/ui/button";
 
 type TAuthFormContext = {
   isPending: boolean;
@@ -214,7 +216,47 @@ function SubmitButton({ children, isSubmitting }: { children: ReactNode; isSubmi
   );
 }
 
+function SendVerificationButton() {
+  const { state, formDataRef } = useAuthForm();
+  const [isPending, setIsPending] = useState(false);
+  const [isSent, setIsSent] = useState(false);
+
+  if (state.verified) return null;
+
+  const email = formDataRef.current?.email || "";
+
+  return (
+    <>
+      <div className="flex items-center justify-center gap-1.5">
+        <input type="hidden" name="email" value={email} />
+        <span className="text-muted-foreground text-sm/normal font-medium">
+          Send verification link?
+        </span>
+        <Button
+          size="auto"
+          type="button"
+          variant="link"
+          onClick={async () => {
+            setIsPending(true);
+            await authClient.sendVerificationEmail({ email, callbackURL: "/dashboard" });
+            toastAction({
+              label: "Verification email sent. Please check your inbox.",
+              icon: "check",
+            });
+            setIsPending(false);
+            setIsSent(true);
+          }}
+          disabled={isPending || isSent}
+        >
+          {isPending ? "Sending..." : isSent ? "Sent" : "Resend"}
+        </Button>
+      </div>
+    </>
+  );
+}
+
 AuthForm.Field = AuthField;
 AuthForm.SubmitButton = SubmitButton;
+AuthForm.SendVerificationButton = SendVerificationButton;
 
 export { AuthForm };

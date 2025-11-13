@@ -2,7 +2,7 @@
 
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { BetterAuthError } from "better-auth";
+import { BetterAuthError, BASE_ERROR_CODES, APIError } from "better-auth";
 
 import {
   SignInSchema,
@@ -11,6 +11,7 @@ import {
   ResetPasswordSchema,
 } from "./lib/schema";
 import { auth } from "./lib/auth";
+import connectToDatabase from "@/lib/db";
 
 export const signInAction = async (formData: FormData) => {
   const rawData = {
@@ -31,9 +32,17 @@ export const signInAction = async (formData: FormData) => {
       body: { email: data.email, password: data.password },
     });
   } catch (err) {
+    if (err instanceof APIError) {
+      if (err.body?.message === BASE_ERROR_CODES.EMAIL_NOT_VERIFIED) {
+        return { success: false, verified: false, error: err.message };
+      }
+      return { success: false, error: err.message };
+    }
+
     if (err instanceof BetterAuthError) {
       return { success: false, error: err.message };
     }
+
     return {
       success: false,
       error: err instanceof Error ? err.message : "Something went wrong. Please try again.",
@@ -58,6 +67,25 @@ export const signUpAction = async (formData: FormData) => {
   }
 
   try {
+    // Check user exists with unverified email
+    const { db } = await connectToDatabase();
+    const usersColl = db.collection("users");
+    const existing = await usersColl.findOne({ email: data.email });
+
+    if (existing) {
+      const emailVerified = existing.emailVerified ?? false;
+
+      if (!emailVerified) {
+        await auth.api.sendVerificationEmail({ body: { email: data.email } });
+        return {
+          success: false,
+          unverified: true,
+          error:
+            "An account exists with this email but it has not been verified. Check your inbox for the verification email.",
+        };
+      }
+    }
+
     await auth.api.signUpEmail({
       headers: await headers(),
       body: {

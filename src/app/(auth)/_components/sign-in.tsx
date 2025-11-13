@@ -11,6 +11,7 @@ export const SignInForm = () => {
         <AuthForm.Field key={field.name} label={field.label} name={field.name} type={field.type} />
       ))}
       <AuthForm.SubmitButton>Sign In</AuthForm.SubmitButton>
+      <AuthForm.SendVerificationButton />
     </AuthForm>
   );
 };
