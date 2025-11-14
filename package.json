@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "postbuild": "node ./src/scripts/warmup-hf.js",
-    "predev": "node ./src/scripts/generate-icons.cjs && dotenv -e .env -- node ./src/scripts/warmup-hf.js",
+    "postbuild": "dotenv -e .env -- node ./src/scripts/warmup-hf.js",
+    "predev": "node ./src/scripts/generate-icons.cjs",
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
