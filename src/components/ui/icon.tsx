@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { iconMap, type AvailableIconNames } from "@/lib/icon.generated";
 

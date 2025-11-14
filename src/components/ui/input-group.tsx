@@ -15,7 +15,7 @@ function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
       role="group"
       className={cn(
         "group/input-group bg-input relative flex w-full items-center overflow-hidden rounded-md shadow-xs transition-[color,box-shadow] outline-none",
-        "h-auto min-w-0 has-[>textarea]:h-22.5 sm:h-11.25",
+        "h-11.25 min-w-0 has-[>textarea]:h-22.5",
         "border-border-500 dark:border-border-300 border",
 
         // Variants based on alignment.
@@ -32,7 +32,7 @@ function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
         "dark:has-[[data-slot=input-group-control]:focus-visible]:ring-offset-card",
 
         // Error state.
-        "has-[[data-slot][aria-invalid=true]]:border-destructive has-[[data-slot][aria-invalid=true]]:ring-(--red-600) dark:has-[[data-slot][aria-invalid=true]]:ring-(--red-800)",
+        "has-[[data-slot][aria-invalid=true]]:ring-red-600 dark:has-[[data-slot][aria-invalid=true]]:ring-red-800",
 
         className,
       )}

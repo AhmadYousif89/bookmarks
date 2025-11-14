@@ -17,35 +17,37 @@ const buttonVariants = cva(
       variant: {
         primary: [
           "h-11.5 w-42.25 p-0",
-          "gradient-border-pseudo relative bg-(--teal-700) text-primary-foreground hover:bg-(--teal-800) active:scale-97 ease",
+          "gradient-border-pseudo relative bg-teal-700 text-primary-foreground hover:bg-teal-800 active:scale-98 ease-in-out",
         ],
         destructive: [
           "h-11.5 w-42.25 px-3 py-2.5",
-          "gradient-border-pseudo relative bg-destructive text-primary-foreground hover:bg-destructive/90 focus-visible:ring-destructive active:scale-97 ease",
+          "gradient-border-pseudo relative bg-destructive text-primary-foreground hover:bg-destructive/90 focus-visible:ring-destructive active:scale-98 ease-in-out",
           "dark:focus-visible:ring-destructive dark:focus-visible:ring-offset-foreground",
         ],
         secondary: [
-          "bg-secondary text-secondary-foreground border-border border-2 active:scale-97 ease",
-          "dark:hover:bg-accent dark:hover:border-(--neutral-dark-500) dark:focus-visible:border-(--neutral-dark-500) dark:active:border-(--neutral-dark-0) dark:active:bg-secondary",
-          "focus-visible:border-border hover:bg-accent active:text-accent-foreground active:bg-secondary active:border-(--teal-700)",
+          "bg-secondary text-secondary-foreground border-border dark:border-border-400 border-2 active:scale-98 ease-in-out",
+          "dark:hover:bg-accent dark:focus-visible:border-(--neutral-dark-500) dark:active:border-(--neutral-dark-0) dark:active:bg-secondary",
+          "focus-visible:border-border hover:bg-accent active:text-accent-foreground active:bg-secondary active:border-teal-700",
         ],
-        ghost: "h-9.5 rounded-sm px-3 py-2",
+        ghost: "h-9.5 rounded-sm px-3 py-2 dark:hover:text-foreground",
         outline: "",
-        link: "text-primary underline-offset-4 hover:underline rounded-[1px]",
+        link: "text-sm/tight font-semibold text-foreground p-0.5 decoration-current underline-offset-4 hover:text-primary hover:underline dark:hover:text-muted-foreground rounded-xs focus-visible:ring-ring dark:focus-visible:text-muted-foreground focus-visible:ring-2",
         navLink: [
           "w-full hover:bg-accent h-9.5 justify-start text-muted-foreground rounded-sm px-3 py-2",
           "focus-visible:bg-accent focus-visible:text-foreground group",
         ],
       },
       size: {
-        default: "h-11.5",
+        default: "h-11.5 px-4 py-3",
         sm: "h-9 px-3",
         lg: "h-10 px-6",
         icon: "size-10",
+        auto: "h-auto",
       },
     },
     defaultVariants: {
       variant: "primary",
+      size: "default",
     },
   },
 );

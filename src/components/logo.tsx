@@ -1,7 +1,12 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-export const Logo = ({ className, asAnchor }: { className?: string; asAnchor?: boolean }) => {
+type Props = {
+  className?: string;
+  closeSheet?: () => void;
+};
+
+export const Logo = ({ className, closeSheet }: Props) => {
   const styles = cn(
     "inline-flex w-fit outline-none",
     "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2",
@@ -17,16 +22,8 @@ export const Logo = ({ className, asAnchor }: { className?: string; asAnchor?: b
     </div>
   );
 
-  if (asAnchor) {
-    return (
-      <a href="/" className={styles}>
-        {content}
-      </a>
-    );
-  }
-
   return (
-    <Link href="/" className={styles}>
+    <Link href="/" onClick={closeSheet} className={styles}>
       {content}
     </Link>
   );
