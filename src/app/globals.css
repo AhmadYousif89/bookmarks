@@ -1,0 +1,180 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-manrope: var(--font-manrope);
+  --font-roboto: var(--font-roboto);
+
+  /* Breakpoints */
+  --breakpoint-site: 90rem; /* 1440px */
+
+  --max-width-site: 90rem; /* 1440px */
+  --max-width-content: 73.75rem; /* 1180px */
+  --max-width-card: 35.625rem; /* 570px */
+  --max-width-sidebar: 18.5rem; /* 296px */
+
+  --color-*: initial;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-input-400: var(--input-400);
+  --color-input-500: var(--input-500);
+  --color-border: var(--border);
+  --color-border-100: var(--border-100);
+  --color-border-200: var(--border-200);
+  --color-border-300: var(--border-300);
+  --color-border-400: var(--border-400);
+  --color-border-500: var(--border-500);
+  --color-checkbox: var(--checkbox);
+  --color-destructive: var(--destructive);
+
+  --color-white: var(--neutral-0);
+  --color-black: var(--neutral-900);
+  --color-teal-700: var(--teal-700);
+  --color-teal-800: var(--teal-800);
+  --color-red-600: var(--red-600);
+  --color-red-800: var(--red-800);
+
+  --radius-xs: calc(var(--radius) - 6px); /* 4px */
+  --radius-sm: calc(var(--radius) - 4px); /* 6px */
+  --radius-md: calc(var(--radius) - 2px); /* 8px */
+  --radius-lg: var(--radius); /* 10px */
+  --radius-xl: calc(var(--radius) + 2px); /* 12px */
+  --radius-2xl: calc(var(--radius) + 4px); /* 14px */
+  --radius-3xl: calc(var(--radius) + 6px); /* 16px */
+  --radius-4xl: calc(var(--radius) + 10px); /* 20px */
+  --radius-5xl: calc(var(--radius) + 14px); /* 24px */
+
+  --text-*: initial;
+  --text-xs: 0.75rem; /* 12px */
+  --text-xs--line-height: 1.417;
+  --text-sm: 0.875rem; /* 14px */
+  --text-sm--line-height: 1.429;
+  --text-base: 1rem; /* 16px */
+  --text-base--line-height: 1.4;
+  --text-lg: 1.25rem; /* 20px */
+  --text-lg--line-height: 1.2;
+  --text-xl: 1.5rem; /* 24px */
+  --text-xl--line-height: 1.417;
+}
+
+:root {
+  --radius: 0.625rem; /* 10px */
+
+  /* Light Mode Colors */
+  --neutral-0: oklch(1 0 0) /* #FFFFFF */;
+  --neutral-100: oklch(0.9488 0.0086 188.11) /* #E8F0EF */;
+  --neutral-200: oklch(0.9366 0.0017 247.84) /* #E9EAEB */;
+  --neutral-300: oklch(0.9244 0.0131 185.08) /* #DDE9E7 */;
+  --neutral-400: oklch(0.8422 0.0168 182.63) /* #C0CFCC */;
+  --neutral-500: oklch(0.657 0.013 183.88) /* #899492 */;
+  --neutral-800: oklch(0.4602 0.0203 182.8) /* #4C5C59 */;
+  --neutral-900: oklch(0.1804 0.0232 185.18) /* #051513 */;
+
+  /* Dark Mode Colors */
+  --neutral-dark-0: oklch(1 0 0) /* #FFFFFF */;
+  --neutral-dark-100: oklch(0.7795 0.0089 196.97) /* #B1B9B9 */;
+  --neutral-dark-300: oklch(0.4928 0.084488 192.5968) /* #00706E */;
+  --neutral-dark-400: oklch(0.3599 0.0616 193.16) /* #004746 */;
+  --neutral-dark-500: oklch(0.3428 0.0587 193.06) /* #004241 */;
+  --neutral-dark-600: oklch(0.2722 0.046685 192.4891) /* #002E2D */;
+  --neutral-dark-800: oklch(0.2167 0.037 194.77) /* #001F1F */;
+  --neutral-dark-900: oklch(0.1732 0.0296 194.77) /* #001414 */;
+
+  /* Additional Colors */
+  --teal-700: oklch(0.3597 0.0614 191.55) /* #014745 */;
+  --teal-800: oklch(0.3223 0.0547 192.92) /* #013C3B */;
+  --red-600: oklch(0.6624 0.2193 27.25) /* #FD4740 */;
+  --red-800: oklch(0.5314 0.2145 29.38) /* #CB0A04 */;
+
+  /* Semantic Colors */
+  --background: var(--neutral-100);
+  --foreground: var(--neutral-900);
+  --card: var(--neutral-0);
+  --card-foreground: var(--neutral-900);
+  --popover: var(--neutral-0);
+  --popover-foreground: var(--neutral-900);
+  --primary: var(--teal-700);
+  --primary-foreground: var(--neutral-0);
+  --secondary: var(--neutral-0);
+  --secondary-foreground: var(--neutral-900);
+  --muted: var(--neutral-300);
+  --muted-foreground: var(--neutral-800);
+  --accent: var(--neutral-100);
+  --accent-foreground: var(--teal-700);
+  --destructive: var(--red-800);
+  --border: var(--neutral-400);
+  --border-100: var(--neutral-100);
+  --border-200: var(--neutral-200);
+  --border-300: var(--neutral-300);
+  --border-500: var(--neutral-500);
+  --input: var(--neutral-0);
+  --ring: var(--teal-700);
+}
+
+.dark {
+  --background: var(--neutral-dark-900);
+  --foreground: var(--neutral-dark-0);
+  --card: var(--neutral-dark-800);
+  --card-foreground: var(--neutral-dark-0);
+  --popover: var(--neutral-dark-800);
+  --popover-foreground: var(--neutral-dark-0);
+  --primary: var(--neutral-dark-800);
+  --primary-foreground: var(--neutral-dark-0);
+  --secondary: var(--neutral-dark-800);
+  --secondary-foreground: var(--neutral-dark-0);
+  --muted: var(--neutral-dark-400);
+  --muted-foreground: var(--neutral-dark-100);
+  --accent: var(--neutral-dark-600);
+  --accent-foreground: var(--neutral-dark-0);
+  --destructive: var(--red-600);
+  --border: var(--neutral-dark-500);
+  --border-300: var(--neutral-dark-300);
+  --border-400: var(--neutral-dark-400);
+  --input: var(--neutral-dark-600);
+  --input-400: var(--neutral-dark-400);
+  --input-500: var(--neutral-dark-500);
+  --ring: var(--neutral-dark-100);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-manrope;
+  }
+}
+
+.gradient-border-pseudo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(to bottom, oklch(1 0 0 / 0.12), transparent);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
