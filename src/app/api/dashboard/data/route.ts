@@ -1,6 +1,6 @@
 import { auth } from "@/app/(auth)/lib/auth";
 import { parseSearchParams } from "@/app/dashboard/_lib/search-params";
-import { getBookmarkCounts, getBookmarkTags } from "@/app/dashboard/dal/user.data.dal";
+import { getBookmarkCounts, getBookmarkTags } from "@/app/dashboard/dal/bookmarks.dal";
 
 export async function GET(req: Request) {
   const searchParams = req.url.split("?")[1] || "";
@@ -14,7 +14,10 @@ export async function GET(req: Request) {
     return new Response(JSON.stringify({ active: 0, archived: 0, tags: [] }), { status: 200 });
   }
 
-  const [tags, counts] = await Promise.all([getBookmarkTags(userId), getBookmarkCounts(parsedSP)]);
+  const [tags, counts] = await Promise.all([
+    getBookmarkTags(userId),
+    getBookmarkCounts(parsedSP, userId),
+  ]);
 
   return new Response(JSON.stringify({ ...counts, tags }), { status: 200 });
 }

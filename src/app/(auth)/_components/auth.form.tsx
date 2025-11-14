@@ -221,7 +221,7 @@ function SendVerificationButton() {
   const [isPending, setIsPending] = useState(false);
   const [isSent, setIsSent] = useState(false);
 
-  if (state.verified) return null;
+  if (state.verified !== false) return null;
 
   const email = formDataRef.current?.email || "";
 

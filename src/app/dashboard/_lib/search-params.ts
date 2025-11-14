@@ -1,3 +1,4 @@
+import { DB_PAGE_LIMIT } from "../dal/user.data.dal";
 import { SortFormat } from "./config";
 
 export type DashboardSearchParams = {
@@ -19,7 +20,7 @@ export function parseSearchParams(sp: Record<string, string | string[] | undefin
   const page = parseInt(get("page") ?? "", 10);
   const safePage = Number.isFinite(page) && page > 0 ? page : 1;
   const limit = parseInt(get("limit") ?? "", 10);
-  const safeLimit = Number.isFinite(limit) && limit > 0 ? limit : 9;
+  const safeLimit = Number.isFinite(limit) && limit > 0 ? limit : DB_PAGE_LIMIT;
   const tagsRaw = get("tags");
   const tags = tagsRaw ? tagsRaw.split(",").filter(Boolean) : undefined;
 
