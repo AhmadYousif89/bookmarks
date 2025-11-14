@@ -3,10 +3,7 @@
 import { z } from "zod";
 import { headers } from "next/headers";
 import { auth } from "@/app/(auth)/lib/auth";
-
-const nameSchema = z.object({
-  name: z.string().trim().min(1, "Name cannot be empty").max(30, "Name is too long"),
-});
+import { uploadToCloudinary } from "./cloudinary";
 
 const passwordSchema = z
   .object({
@@ -22,46 +19,10 @@ const passwordSchema = z
     path: ["confirmPassword"],
   });
 
-export async function updateUserName(prevState: unknown, formData: FormData) {
-  const { success, data, error } = nameSchema.safeParse({
-    name: formData.get("name"),
-  });
-
-  try {
-    if (!success) {
-      throw new Error(error.issues.map((e) => e.message).join(", "));
-    }
-
-    const session = await auth.api.getSession({ headers: await headers() });
-    if (!session?.user) {
-      throw new Error("User is not authenticated");
-    }
-
-    const exUserName = session.user.name || "";
-    if (data.name === exUserName) {
-      return { success: true, error: null, message: "No changes made" };
-    }
-
-    const updatedUser = await auth.api.updateUser({
-      body: { name: data.name },
-      headers: await headers(),
-    });
-
-    if (!updatedUser) {
-      throw new Error("Failed to update user");
-    }
-
-    return { success: true, error: null, message: "Name updated successfully" };
-  } catch (error) {
-    console.log("Error updating user profile:", error);
-    return { success: false, error: (error as Error).message };
-  }
-}
-
 export type PasswordField = "currentPassword" | "newPassword" | "confirmPassword";
 export type FieldError = { path: PasswordField; message: string };
 
-export async function updateUserPassword(prevState: unknown, formData: FormData) {
+export async function updateUserPassword(formData: FormData) {
   const { success, data, error } = passwordSchema.safeParse({
     currentPassword: formData.get("currentPassword"),
     newPassword: formData.get("newPassword"),
@@ -94,5 +55,24 @@ export async function updateUserPassword(prevState: unknown, formData: FormData)
       message: null,
       errors: [{ path: "currentPassword", message: msg }],
     };
+  }
+}
+
+export async function uploadUserAvatar(formData: FormData) {
+  const file = formData.get("image") as File | null;
+
+  if (!file || file.size === 0) {
+    console.log({ file });
+    return { success: false, message: "No file provided" };
+  }
+
+  try {
+    const imageUrl = await uploadToCloudinary(file);
+    if (!imageUrl) throw new Error("Image upload failed");
+    await auth.api.updateUser({ body: { image: imageUrl }, headers: await headers() });
+    return { success: true, imageUrl, message: "Image uploaded successfully" };
+  } catch (err) {
+    const msg = (err as Error).message || "Failed to upload image";
+    return { success: false, message: msg };
   }
 }

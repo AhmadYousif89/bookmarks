@@ -23,7 +23,10 @@ const initialState = {
 };
 
 export function SecurityTab({ isDemo }: { isDemo: boolean }) {
-  const [state, action, pending] = useActionState(updateUserPassword, initialState);
+  const [state, action, pending] = useActionState(
+    (pv: unknown, data: FormData) => updateUserPassword(data),
+    initialState,
+  );
 
   const [form, setForm] = useState({
     currentPassword: "",
