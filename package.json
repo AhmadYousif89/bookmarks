@@ -2,6 +2,12 @@
   "name": "bookmark-manager",
   "version": "0.1.0",
   "private": true,
+  "author": "Ahmad Yousif",
+  "license": "MIT",
+  "repository": {
+    "url": "https://hithub.com/ahmadyousif89/bookmarks",
+    "type": "git"
+  },
   "scripts": {
     "postbuild": "dotenv -e .env -- node ./src/scripts/warmup-hf.js",
     "predev": "node ./src/scripts/generate-icons.cjs",
