@@ -5,13 +5,9 @@ import { useActionState } from "react";
 import { SignInDemoUser } from "../actions";
 import { toastAction } from "@/components/toast-action";
 import { ActionButton } from "@/components/action.button";
-import { useSession } from "@/app/(auth)/lib/auth.client";
 
-export const StartDemoButton = () => {
+export const StartDemoButton = ({ isUser }: { isUser: boolean }) => {
   const [state, action, isPending] = useActionState(SignInDemoUser, undefined);
-  const { data } = useSession();
-
-  const isUser = data?.user.isDemo === false;
 
   return (
     <form action={action}>
@@ -20,7 +16,7 @@ export const StartDemoButton = () => {
         variant="secondary"
         disabled={isPending}
         isPending={isPending}
-        className="w-full sm:w-3xs"
+        className="sm:w-3xs"
         onClick={() => {
           if (isUser) toastAction("Please sign out of your current account to start the demo.");
         }}

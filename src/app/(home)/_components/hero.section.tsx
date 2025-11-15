@@ -1,11 +1,16 @@
 import Link from "next/link";
+import { headers } from "next/headers";
 import { ArrowRight, Bookmark, Check, Sparkles } from "lucide-react";
 
+import { auth } from "@/app/(auth)/lib/auth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StartDemoButton } from "./demo.button";
 
-export const HeroSection = () => {
+export const HeroSection = async () => {
+  const session = await auth.api.getSession({ headers: await headers() });
+  const isUser = session?.user.isDemo === false;
+
   return (
     <section className="max-w-site site:py-24 site:px-0 mx-auto grid w-full grow items-center p-8 md:py-12 lg:py-20">
       <div className="grid items-center justify-between gap-16 md:grid-cols-2">
@@ -30,7 +35,7 @@ export const HeroSection = () => {
                 Join Now <ArrowRight className="size-4" />
               </Link>
             </Button>
-            <StartDemoButton />
+            <StartDemoButton isUser={isUser} />
           </div>
         </div>
 
