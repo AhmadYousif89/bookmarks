@@ -1,10 +1,34 @@
 "use client";
 
 import { toast } from "sonner";
-import { Icon } from "@/components/ui/icon";
-import { TOAST_ACTIONS, type ToastAction, type ToastLabel } from "../_lib/config";
-import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { Icon } from "@/components/ui/icon";
+import { AvailableIconNames } from "@/lib/icon.generated";
+
+export const TOAST_LABELS = [
+  "Bookmark added successfully.",
+  "Changes saved.",
+  "Link copied to clipboard.",
+  "Bookmark pinned to top.",
+  "Bookmark archived.",
+  "Bookmark restored.",
+  "Bookmark deleted.",
+] as const;
+export type ToastType = "success" | "error" | "info" | "warning";
+export type ToastLabel = (typeof TOAST_LABELS)[number] | (string & {}); // allow custom strings
+export type ToastAction = { label: ToastLabel; icon?: AvailableIconNames; type?: ToastType };
+
+export const TOAST_ACTIONS: ToastAction[] = [
+  { label: "Bookmark added successfully.", icon: "check", type: "success" },
+  { label: "Changes saved.", icon: "check", type: "success" },
+  { label: "Link copied to clipboard.", icon: "copy", type: "info" },
+  { label: "Bookmark pinned to top.", icon: "pin", type: "info" },
+  { label: "Bookmark archived.", icon: "archive", type: "info" },
+  { label: "Bookmark restored.", icon: "unarchive", type: "info" },
+  { label: "Bookmark deleted.", icon: "delete", type: "warning" },
+] as const;
 
 const byLabel = TOAST_ACTIONS.reduce(
   (acc, a) => {

@@ -28,29 +28,6 @@ export const ITEMS: Item[] = [
 
 export type ItemLabelKeys = (typeof ITEMS)[number]["label"];
 
-export const TOAST_LABELS = [
-  "Bookmark added successfully.",
-  "Changes saved.",
-  "Link copied to clipboard.",
-  "Bookmark pinned to top.",
-  "Bookmark archived.",
-  "Bookmark restored.",
-  "Bookmark deleted.",
-] as const;
-export type ToastType = "success" | "error" | "info" | "warning";
-export type ToastLabel = (typeof TOAST_LABELS)[number] | (string & {}); // allow custom strings
-export type ToastAction = { label: ToastLabel; icon?: AvailableIconNames; type?: ToastType };
-
-export const TOAST_ACTIONS: ToastAction[] = [
-  { label: "Bookmark added successfully.", icon: "check", type: "success" },
-  { label: "Changes saved.", icon: "check", type: "success" },
-  { label: "Link copied to clipboard.", icon: "copy", type: "info" },
-  { label: "Bookmark pinned to top.", icon: "pin", type: "info" },
-  { label: "Bookmark archived.", icon: "archive", type: "info" },
-  { label: "Bookmark restored.", icon: "unarchive", type: "info" },
-  { label: "Bookmark deleted.", icon: "delete", type: "warning" },
-] as const;
-
 type SortByOrder = "asc" | "desc";
 type SortByKey = "date" | "last-visit" | "most-visited";
 export type SortFormat = `${SortByKey}:${SortByOrder}`;
