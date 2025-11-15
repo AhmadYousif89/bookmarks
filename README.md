@@ -7,9 +7,9 @@ This project is based on the [Frontend Mentor - Bookmark manager app challenge](
 
 <br/>
 
-<div style="display: flex; gap: 1rem; width: 100%;">
-  <img src="public/screenshots/light-dashboard.png" alt="Dashboard Light" style="width: 50%;" />
-  <img src="public/screenshots/dark-dashboard.png" alt="Dashboard Dark" style="width: 50%;" />
+<div>
+  <img src="public/screenshots/light-dashboard.png" alt="Dashboard Light" style="width: 49%;" />
+  <img src="public/screenshots/dark-dashboard.png" alt="Dashboard Dark" style="width: 49%;" />
 </div>
 
 <br/>
