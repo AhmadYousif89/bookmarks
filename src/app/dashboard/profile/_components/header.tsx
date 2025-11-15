@@ -3,6 +3,7 @@
 import Form from "next/form";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useRef, useState } from "react";
+import { Upload } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +15,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toastAction } from "../../_components/toast-action";
 import { uploadUserAvatar } from "../actions";
-import { Upload, UploadCloud } from "lucide-react";
 
 export const ProfileHeader = ({ user }: { user: Session["user"] }) => {
   const router = useRouter();
@@ -37,8 +37,21 @@ export const ProfileHeader = ({ user }: { user: Session["user"] }) => {
     }
   }, [state]);
 
+  const userBadge = (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Badge className="dark:bg-muted cursor-default text-center whitespace-normal">
+          {user.role}
+        </Badge>
+      </TooltipTrigger>
+      <TooltipContent showArrow align="end">
+        {isdemo ? "Demo account with limited access." : "Basic account"}
+      </TooltipContent>
+    </Tooltip>
+  );
+
   return (
-    <Card className="flex-row items-stretch justify-between gap-4 border-none p-4 shadow-none md:p-6">
+    <Card className="min-h-22 flex-row items-stretch justify-between gap-4 border-none p-4 shadow-none md:p-6">
       {isdemo ? (
         <>
           <div className="flex items-center gap-4">
@@ -51,18 +64,7 @@ export const ProfileHeader = ({ user }: { user: Session["user"] }) => {
             </div>
           </div>
 
-          <div className="grid justify-items-end self-start">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Badge className="dark:bg-muted cursor-default text-center whitespace-normal">
-                  {user.role}
-                </Badge>
-              </TooltipTrigger>
-              <TooltipContent showArrow align="end">
-                {isdemo ? "Demo account with limited access." : "Basic account"}
-              </TooltipContent>
-            </Tooltip>
-          </div>
+          {userBadge}
         </>
       ) : (
         <Form action={action} className="flex w-full items-stretch justify-between gap-4">
@@ -80,16 +82,7 @@ export const ProfileHeader = ({ user }: { user: Session["user"] }) => {
           </div>
 
           <div className="grid justify-items-end self-start">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Badge className="dark:bg-muted cursor-default text-center whitespace-normal">
-                  {user.role}
-                </Badge>
-              </TooltipTrigger>
-              <TooltipContent showArrow align="end">
-                {isdemo ? "Demo account with limited access." : "Basic account"}
-              </TooltipContent>
-            </Tooltip>
+            {userBadge}
 
             {imageFile && imageFile.size > 0 && (
               <ActionButton
@@ -98,13 +91,13 @@ export const ProfileHeader = ({ user }: { user: Session["user"] }) => {
                 variant="secondary"
                 disabled={isPending}
                 isPending={isPending}
-                className="mt-2 min-w-10.5 rounded-full py-0.5 sm:px-2 sm:py-1 *:[svg]:size-4.5"
+                className="mt-1 min-w-10.5 rounded-full py-0.5 sm:px-2 sm:py-1 *:[svg]:size-4.5"
               >
-                <Upload />
                 <span className="max-sm:sr-only sm:hidden">
                   {isPending ? "Uploading..." : "Upload avatar"}
                 </span>
-                <span className="hidden text-xs sm:block">Upload avatar</span>
+                <Upload />
+                <span className="hidden text-xs/tight sm:block">Upload avatar</span>
               </ActionButton>
             )}
           </div>
@@ -118,13 +111,14 @@ type Props = {
   name: string;
   image?: string | null;
   onFileSelected?: (file: File) => void;
-  className?: string;
   inputName?: string;
 };
 
-export const UserImagePicker = ({ name, image, inputName, onFileSelected, className }: Props) => {
-  const [preview, setPreview] = useState<string | null>(image ?? null);
+export const UserImagePicker = ({ name, image, inputName, onFileSelected }: Props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const allowTooltipOpen = useRef(false);
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+  const [preview, setPreview] = useState<string | null>(image ?? null);
 
   const MAX_BYTES = 2 * 1024 * 1024; // 2 MB
 
@@ -137,6 +131,26 @@ export const UserImagePicker = ({ name, image, inputName, onFileSelected, classN
       if (preview && preview.startsWith("blob:")) URL.revokeObjectURL(preview);
     };
   }, [preview]);
+
+  const handlePointerEnter = () => {
+    allowTooltipOpen.current = true;
+    setTooltipOpen(true);
+  };
+
+  const handlePointerLeave = () => {
+    allowTooltipOpen.current = false;
+    setTooltipOpen(false);
+  };
+
+  const handleTooltipOpenChange = (open: boolean) => {
+    if (open) {
+      if (allowTooltipOpen.current) setTooltipOpen(true);
+      else setTooltipOpen(false);
+    } else {
+      allowTooltipOpen.current = false;
+      setTooltipOpen(false);
+    }
+  };
 
   const handleClick = () => inputRef.current?.click();
 
@@ -170,13 +184,16 @@ export const UserImagePicker = ({ name, image, inputName, onFileSelected, classN
 
   return (
     <div className="bg-primary dark:bg-accent flex size-10 items-center justify-center rounded-full">
-      <Tooltip>
+      <Tooltip open={tooltipOpen} onOpenChange={handleTooltipOpenChange}>
         <TooltipTrigger asChild>
           <Button
             type="button"
             size="auto"
             variant="ghost"
             onClick={handleClick}
+            onBlur={handlePointerLeave}
+            onPointerEnter={handlePointerEnter}
+            onPointerLeave={handlePointerLeave}
             aria-label="Select profile image"
             className="bg-background size-fit cursor-pointer overflow-hidden rounded-full p-0"
           >
