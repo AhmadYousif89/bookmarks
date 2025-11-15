@@ -10,7 +10,7 @@ export const sendEmail = async (user: User, url: string) => {
   const text = await render(<VerfiEmailTemplate user={user} url={url} />, { plainText: true });
 
   await resend.emails.send({
-    from: "onboarding@resend.dev",
+    from: "verify@ayob.dev",
     to: user.email,
     subject: "Verify your Bookmark Manager account",
     html,

@@ -10,7 +10,7 @@ export const sendResetEmail = async (user: User, url: string) => {
   const text = await render(<ResetEmailTemplate user={user} url={url} />, { plainText: true });
 
   await resend.emails.send({
-    from: "onboarding@resend.dev",
+    from: "reset@ayob.dev",
     to: user.email,
     subject: "Reset your Bookmark Manager password",
     html,

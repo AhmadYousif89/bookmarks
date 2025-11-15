@@ -3,8 +3,8 @@
 import { useActionState } from "react";
 
 import { SignInDemoUser } from "../actions";
+import { toastAction } from "@/components/toast-action";
 import { ActionButton } from "@/components/action.button";
-import { toastAction } from "@/app/dashboard/_components/toast-action";
 import { useSession } from "@/app/(auth)/lib/auth.client";
 
 export const StartDemoButton = () => {

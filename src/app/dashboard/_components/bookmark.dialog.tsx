@@ -15,13 +15,13 @@ import {
 } from "@/components/ui/dialog";
 import { Icon } from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
+import { toastAction } from "@/components/toast-action";
 import { ActionButton } from "@/components/action.button";
 import { FieldSet, FieldGroup } from "@/components/ui/field";
 import { DescriptionTextarea } from "./description.textarea";
 import { UrlInput } from "./url.input";
 import { TagsInput } from "./tags.input";
 import { TitleInput } from "./title.input";
-import { toastAction } from "./toast-action";
 import { useDashboard } from "../dashboard.context";
 import { GeneratedAIData } from "../actions/generate-metadata";
 import { GenerateMetadataForm } from "./generate-metadata.form";

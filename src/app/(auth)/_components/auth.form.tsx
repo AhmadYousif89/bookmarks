@@ -9,7 +9,9 @@ import {
   useEffect,
   useMemo,
 } from "react";
+
 import { Eye, EyeClosed } from "lucide-react";
+import { authClient } from "../lib/auth.client";
 
 import {
   InputGroup,
@@ -17,12 +19,11 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { Button } from "@/components/ui/button";
+import { toastAction } from "@/components/toast-action";
 import { ActionButton } from "@/components/action.button";
 import { Field, FieldError, FieldLabel, FieldSet } from "@/components/ui/field";
 import { FieldErrors, FieldNames, FieldProps, FormDataRecord, FormState } from "../lib/types";
-import { toastAction } from "@/app/dashboard/_components/toast-action";
-import { authClient } from "../lib/auth.client";
-import { Button } from "@/components/ui/button";
 
 type TAuthFormContext = {
   isPending: boolean;
