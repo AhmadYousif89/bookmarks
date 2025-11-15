@@ -1,6 +1,5 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import {
   createContext,
   useCallback,
@@ -10,7 +9,8 @@ import {
   useRef,
   useState,
 } from "react";
-import { TagData } from "./dal/user.data.dal";
+import { useSearchParams } from "next/navigation";
+import { TagData } from "./dal/bookmarks.dal";
 
 type DState = {
   active?: number;
