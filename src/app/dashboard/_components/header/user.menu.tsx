@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-import { Session, signOut, useSession } from "@/app/(auth)/lib/auth.client";
+import { Session, signOut } from "@/app/(auth)/lib/auth.client";
 
 import {
   DropdownMenu,
@@ -14,8 +14,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Icon } from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
+import { UserAvatar } from "@/components/user.avatar";
 import { ThemeSwitcher } from "@/components/theme.switch";
-import { UserAvatar } from "./user.avatar";
 
 export const UserAvatarMenu = ({ user }: { user: Session["user"] }) => {
   const router = useRouter();
@@ -51,14 +51,10 @@ export const UserAvatarMenu = ({ user }: { user: Session["user"] }) => {
               className="px-4 py-3"
             >
               <div className="flex items-center gap-3">
-                <UserAvatar name={user?.name || ""} image={user?.image || ""} />
+                <UserAvatar name={user.name} image={user.image || undefined} />
                 <div className="grid">
-                  <span className="text-foreground text-sm/normal font-semibold">
-                    {user?.name || ""}
-                  </span>
-                  <span className="text-muted-foreground text-sm font-medium">
-                    {user?.email || ""}
-                  </span>
+                  <span className="text-foreground text-sm/normal font-semibold">{user.name}</span>
+                  <span className="text-muted-foreground text-sm font-medium">{user.email}</span>
                 </div>
               </div>
             </DropdownMenuItem>

@@ -3,18 +3,17 @@
 import Form from "next/form";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useRef, useState } from "react";
-import { Upload } from "lucide-react";
+import { Upload, X } from "lucide-react";
 
-import { uploadUserAvatar } from "../actions";
 import { Session } from "@/app/(auth)/lib/auth.client";
+import { uploadUserAvatar } from "../actions";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { UserBadge } from "@/components/user.badge";
+import { UserAvatar } from "@/components/user.avatar";
 import { toastAction } from "@/components/toast-action";
 import { ActionButton } from "@/components/action.button";
-import { UserAvatar } from "../../_components/header/user.avatar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { UserBadge } from "../../_components/header/user-role.badge";
 
 export const ProfileHeader = ({ user }: { user: Session["user"] }) => {
   const router = useRouter();
@@ -38,7 +37,7 @@ export const ProfileHeader = ({ user }: { user: Session["user"] }) => {
   }, [state]);
 
   return (
-    <Card className="min-h-22 flex-row items-stretch justify-between gap-4 border-none p-4 shadow-none md:p-6">
+    <Card className="min-h-26 flex-row items-stretch justify-between gap-4 border-none p-4 shadow-none md:p-6">
       {isdemo ? (
         <>
           <div className="flex items-center gap-4">
@@ -98,7 +97,7 @@ export const ProfileHeader = ({ user }: { user: Session["user"] }) => {
 type Props = {
   name: string;
   image?: string | null;
-  onFileSelected?: (file: File) => void;
+  onFileSelected?: (file: File | null) => void;
   inputName?: string;
 };
 
@@ -160,18 +159,28 @@ export const UserImagePicker = ({ name, image, inputName, onFileSelected }: Prop
     onFileSelected?.(file);
   };
 
-  const initials =
-    name && name.length
-      ? name
-          .split(" ")
-          .map((n) => n[0])
-          .join("")
-          .slice(0, 2)
-          .toUpperCase()
-      : "U";
+  const handleClearPreview = () => {
+    setPreview((prev) => {
+      if (prev && prev.startsWith("blob:")) URL.revokeObjectURL(prev);
+      return null;
+    });
+    onFileSelected?.(null);
+    if (inputRef.current) inputRef.current.value = "";
+  };
 
   return (
-    <div className="bg-primary dark:bg-accent flex size-10 items-center justify-center rounded-full">
+    <div className="bg-primary dark:bg-accent relative flex size-10 items-center justify-center rounded-full">
+      {preview && preview.startsWith("blob:") && (
+        <Button
+          type="button"
+          size="auto"
+          variant="destructive"
+          onClick={handleClearPreview}
+          className="absolute -top-2.5 -left-2.5 z-20 w-fit rounded-full p-0.5"
+        >
+          <X className="size-3.5" />
+        </Button>
+      )}
       <Tooltip open={tooltipOpen} onOpenChange={handleTooltipOpenChange}>
         <TooltipTrigger asChild>
           <Button
@@ -183,19 +192,9 @@ export const UserImagePicker = ({ name, image, inputName, onFileSelected }: Prop
             onPointerEnter={handlePointerEnter}
             onPointerLeave={handlePointerLeave}
             aria-label="Select profile image"
-            className="bg-background size-fit cursor-pointer overflow-hidden rounded-full p-0"
+            className="size-fit cursor-pointer overflow-hidden rounded-none p-0"
           >
-            <Avatar className="bg-background size-10">
-              {preview ? (
-                <AvatarImage
-                  src={preview}
-                  alt={`${name} avatar`}
-                  className="aspect-square rounded-full bg-transparent object-cover object-center"
-                />
-              ) : (
-                <AvatarFallback>{initials}</AvatarFallback>
-              )}
-            </Avatar>
+            <UserAvatar name={name} image={preview || undefined} />
           </Button>
         </TooltipTrigger>
         <TooltipContent showArrow align="center">

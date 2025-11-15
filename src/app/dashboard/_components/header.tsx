@@ -4,7 +4,7 @@ import { auth } from "@/app/(auth)/lib/auth";
 import { SearchForm } from "./header/search.form";
 import { AddBookmarkModal } from "./create.modal";
 import { UserAvatarMenu } from "./header/user.menu";
-import { UserBadge } from "./header/user-role.badge";
+import { UserBadge } from "@/components/user.badge";
 
 export const DashboardHeader = async () => {
   const session = await auth.api.getSession({ headers: await headers() });

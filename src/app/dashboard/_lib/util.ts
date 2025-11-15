@@ -124,3 +124,12 @@ export const getColor = (count: number): string => {
   }
   return levels[0].color;
 };
+
+export function getUserInitials(name: string) {
+  const cleaned = (name || "").trim();
+  if (!cleaned) return "U";
+  const parts = cleaned.split(/\s+/).filter(Boolean);
+  const letters = parts.map((p) => p[0]?.toUpperCase()).filter(Boolean);
+  const joined = letters.slice(0, 2).join("");
+  return joined || cleaned[0].toUpperCase() || "U";
+}

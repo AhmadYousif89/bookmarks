@@ -114,7 +114,7 @@ const BtnContent = ({ children, isLoading }: { isLoading: boolean; children: Rea
     />
     <span
       className={cn(
-        "inline-flex w-full items-center justify-between gap-2 transition-opacity duration-150",
+        "inline-flex items-center justify-between gap-2 transition-opacity duration-150",
         isLoading ? "invisible scale-0 opacity-0" : "visible scale-100 opacity-100",
       )}
     >
