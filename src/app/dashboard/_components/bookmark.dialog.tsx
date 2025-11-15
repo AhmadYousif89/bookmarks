@@ -70,24 +70,23 @@ export const BookmarkModal = ({
   }, [state.error]);
   // Close and clear on success
   useEffect(() => {
-    if (state.success) {
-      formRef.current?.reset();
-      setLocalErrors(null);
-      setAiData(null);
-      setShowUrlInput(false);
-      if (isControlled) {
-        onOpenChange?.(false);
-      } else {
-        setInternalOpen(false);
-      }
-      toastAction({
-        label: defaultData ? "Changes saved." : "Bookmark added successfully.",
-        icon: "check",
-      });
-      console.log("Refreshing dashboard data...");
-      refresh?.(); // Refresh dashboard data api route (tags/counts)
+    if (!state.success) return;
+
+    formRef.current?.reset();
+    setLocalErrors(null);
+    setAiData(null);
+    setShowUrlInput(false);
+    if (isControlled) {
+      onOpenChange?.(false);
+    } else {
+      setInternalOpen(false);
     }
-  }, [state, onOpenChange]);
+    toastAction({
+      label: defaultData ? "Changes saved." : "Bookmark added successfully.",
+      icon: "check",
+    });
+    refresh?.(); // Refresh dashboard data api route (tags/counts)
+  }, [state.success, defaultData, isControlled, onOpenChange, refresh]);
   // Show a toast for top-level errors (non-field)
   useEffect(() => {
     const message = state.error?.message;
@@ -150,7 +149,7 @@ export const BookmarkModal = ({
       <DialogContent className="bg-card gap-8 rounded-2xl px-5 py-6 md:p-8">
         <DialogHeader>
           <DialogTitle className="text-xl leading-8.5 font-bold">
-            {showUrlInput ? "Generate Metadata with AI" : isEdit ? "Edit Bookmark" : "Add Bookmark"}
+            {showUrlInput ? "Generate with AI" : isEdit ? "Edit Bookmark" : "Add Bookmark"}
           </DialogTitle>
           <DialogDescription className="flex items-center justify-between gap-2">
             <span>
@@ -173,7 +172,6 @@ export const BookmarkModal = ({
             onSuccess={(data) => {
               setAiData(data);
               setShowUrlInput(false);
-              refresh?.();
             }}
             onError={(err) => {
               toastAction(err);

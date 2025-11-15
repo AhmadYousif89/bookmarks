@@ -33,8 +33,10 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
   const [trigger, setTrigger] = useState(0); // to force refresh
 
   const qs = useMemo(() => searchParams.toString(), [searchParams]);
-  // function to refresh counts on demand
-  const refresh = useCallback(() => setTrigger((t) => t + 1), []);
+  // function to refresh the data on demand
+  const refresh = useCallback(() => {
+    setTrigger((t) => t + 1);
+  }, []);
 
   useEffect(() => {
     abortRef.current?.abort();
@@ -42,7 +44,8 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
     abortRef.current = controller;
 
     setState((s) => ({ ...s, loading: true }));
-    const url = qs ? `/api/dashboard/data?${qs}` : `/api/dashboard/data`;
+    const base = "/api/dashboard/data";
+    const url = qs ? `${base}?${qs}&_=${Date.now()}` : `${base}?_=${Date.now()}`;
 
     fetch(url, { signal: controller.signal, cache: "no-store" })
       .then(async (res) => {

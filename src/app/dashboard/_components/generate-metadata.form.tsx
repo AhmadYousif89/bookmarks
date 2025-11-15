@@ -14,7 +14,6 @@ import {
   InputGroupAddon,
   InputGroupButton,
 } from "@/components/ui/input-group";
-import Image from "next/image";
 
 type Props = {
   onSuccess?: (data: GeneratedAIData) => void;

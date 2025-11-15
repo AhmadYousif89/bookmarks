@@ -249,7 +249,7 @@ const ItemWithAlert = ({
       asChild
       disabled={disabled}
       onSelect={(e) => e.preventDefault()}
-      className="group mb-1 gap-2.5 p-0 last:mb-0"
+      className="group mb-1 w-full justify-start gap-2.5 p-0 last:mb-0"
     >
       <ActionButton
         variant="outline"
