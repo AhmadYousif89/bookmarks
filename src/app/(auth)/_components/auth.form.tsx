@@ -58,7 +58,7 @@ function AuthForm({ children, action, onSuccess }: AuthFormProps) {
   const shownMessageRef = useRef<string | null>(null);
   const formDataRef = useRef<Record<FieldNames, string>>(initialFormData);
   const [state, actionFn, isPending] = useActionState(
-    (state: FormState, data: FormData) => {
+    (pvState: FormState, data: FormData) => {
       formDataRef.current = Object.fromEntries(data.entries()) as FormDataRecord;
       return action(data);
     },
@@ -204,13 +204,10 @@ function AuthField({ label, type, onChange, ...props }: AuthFieldProps) {
 function SubmitButton({ children, isSubmitting }: { children: ReactNode; isSubmitting?: boolean }) {
   const { isPending } = useAuthForm();
 
+  const isLoading = isPending || isSubmitting;
+
   return (
-    <ActionButton
-      type="submit"
-      className="w-full"
-      disabled={isPending}
-      isPending={isPending || isSubmitting}
-    >
+    <ActionButton type="submit" className="w-full" disabled={isLoading} isPending={isLoading}>
       {children}
     </ActionButton>
   );
@@ -219,11 +216,31 @@ function SubmitButton({ children, isSubmitting }: { children: ReactNode; isSubmi
 function SendVerificationButton() {
   const { state, formDataRef } = useAuthForm();
   const [isPending, setIsPending] = useState(false);
-  const [isSent, setIsSent] = useState(false);
+  const isSentRef = useRef(false);
 
   if (state.verified !== false) return null;
 
   const email = formDataRef.current?.email || "";
+
+  const handleVerification = async () => {
+    setIsPending(true);
+    const { data, error } = await authClient.sendVerificationEmail({
+      email,
+      callbackURL: "/dashboard",
+    });
+
+    if (data?.status) {
+      toastAction({
+        label: "Verification email sent. Please check your inbox.",
+        icon: "check",
+      });
+      setIsPending(false);
+      isSentRef.current = true;
+    } else {
+      toastAction(error?.message || "Failed to send verification email. Please try again.");
+      setIsPending(false);
+    }
+  };
 
   return (
     <>
@@ -236,19 +253,10 @@ function SendVerificationButton() {
           size="auto"
           type="button"
           variant="link"
-          onClick={async () => {
-            setIsPending(true);
-            await authClient.sendVerificationEmail({ email, callbackURL: "/dashboard" });
-            toastAction({
-              label: "Verification email sent. Please check your inbox.",
-              icon: "check",
-            });
-            setIsPending(false);
-            setIsSent(true);
-          }}
-          disabled={isPending || isSent}
+          onClick={handleVerification}
+          disabled={isPending || isSentRef.current}
         >
-          {isPending ? "Sending..." : isSent ? "Sent" : "Resend"}
+          {isPending ? "Sending..." : isSentRef.current ? "Sent" : "Resend"}
         </Button>
       </div>
     </>

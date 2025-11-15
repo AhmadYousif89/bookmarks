@@ -19,6 +19,7 @@ export const StartDemoButton = () => {
         type={isUser ? "button" : "submit"}
         variant="secondary"
         disabled={isPending}
+        isPending={isPending}
         className="w-full sm:w-3xs"
         onClick={() => {
           if (isUser) toastAction("Please sign out of your current account to start the demo.");
