@@ -10,19 +10,11 @@ import { sendResetEmail } from "../email/send-reset.email";
 
 const TEST_EXPIRES_IN = 2 * 60 * 60;
 const PROD_EXPIRES_IN = 12 * 60 * 60; // 12 hours
-
-const trustedOrigins = (request: Request) => {
-  const origin = request.headers.get("origin");
-  const localIpPattern = /^http:\/\/192\.168\.\d+\.\d+:3000$/;
-  const devOrigins = ["http://localhost:3000"];
-
-  if (origin && localIpPattern.test(origin)) devOrigins.push(origin);
-
-  return process.env.NODE_ENV === "development" ? devOrigins : [process.env.BETTER_AUTH_URL!];
-};
+const devOrigin = "http://localhost:3000";
+const trustedOrigins = [process.env.BETTER_AUTH_URL as string, devOrigin];
 
 const APP_BASE_URL =
-  process.env.NODE_ENV !== "development" ? process.env.BETTER_AUTH_URL : "http://localhost:3000";
+  process.env.NODE_ENV === "development" ? devOrigin : process.env.BETTER_AUTH_URL;
 
 const { db, client } = await connectToDatabase();
 export const auth = betterAuth({
@@ -35,10 +27,9 @@ export const auth = betterAuth({
     expiresIn: 1 * 60 * 60, // 1 hour
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
-      const callbackPath = process.env.BETTER_AUTH_CALLBACK_URL ?? `${APP_BASE_URL}/dashboard`;
       try {
         const u = new URL(url);
-        u.searchParams.set("callbackURL", callbackPath);
+        u.searchParams.set("callbackURL", "/dashboard");
         await sendEmail(user, u.toString());
       } catch (e) {
         console.error("Error constructing verification URL:", e);

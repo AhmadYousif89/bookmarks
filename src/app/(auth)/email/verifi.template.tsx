@@ -39,15 +39,15 @@ export const VerfiEmailTemplate = ({ user, url }: VerfiEmailProps) => (
           Welcome to Bookmark Manager! Please verify your email address by clicking the button
           below.
         </Text>
-        <Text style={paragraph}>
-          This link will expire in 1 hour. If you did not create an account, please ignore this
-          email.
-        </Text>
         <Section style={btnContainer}>
           <Button style={button} href={url} rel="noopener noreferrer" target="_blank">
             Verify Email
           </Button>
         </Section>
+        <Text style={paragraph}>
+          This link will expire in 1 hour. If you did not create an account, please ignore this
+          email.
+        </Text>
         <Text style={paragraph}>
           Best,
           <br />
