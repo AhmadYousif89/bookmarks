@@ -1,8 +1,9 @@
 "use client";
 
-import { Fragment, memo, Suspense } from "react";
+import { Fragment, memo } from "react";
 
 import { toast } from "sonner";
+import { LockKeyhole } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TBookmark } from "@/lib/types";
 import { AvailableIconNames } from "@/lib/icon.generated";
@@ -16,16 +17,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Icon } from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { ActionButton } from "@/components/action.button";
 import {
   updateBookmarkArchiveStatus,
   updateBookmarkPinStatus,
   updateVisitCount,
 } from "../actions/update";
-import { toastAction } from "./toast-action";
 import { deleteBookmarkAction } from "../actions/delete";
 import { useDashboard } from "../dashboard.context";
+import { useSession } from "@/app/(auth)/lib/auth.client";
+import { toastAction } from "@/components/toast-action";
 
 const visibilityMap: Record<ItemLabelKeys, (bookmark: TBookmark) => boolean> = {
   Visit: () => true,
@@ -51,6 +52,10 @@ type Props = {
 
 export const BookmarkSettingsMenu = memo(({ bookmark, onEdit, isPending, setPending }: Props) => {
   const { refresh } = useDashboard();
+  const { data } = useSession();
+
+  const isDemo = !!data?.user?.isDemo;
+  const DEMO_RESTRICTED: ItemLabel[] = ["Edit", "Archive", "Unarchive", "Delete Permanently"];
 
   const handleVisits = async (b: TBookmark) => {
     const res = await updateVisitCount(b.id);
@@ -136,6 +141,9 @@ export const BookmarkSettingsMenu = memo(({ bookmark, onEdit, isPending, setPend
           if (!shouldShowItem(item, bookmark)) {
             return null;
           }
+
+          const disabledForDemo = isDemo && DEMO_RESTRICTED.includes(item.label);
+
           const requireUserAction =
             item.label === "Archive" ||
             item.label === "Unarchive" ||
@@ -145,17 +153,18 @@ export const BookmarkSettingsMenu = memo(({ bookmark, onEdit, isPending, setPend
             <Fragment key={item.label}>
               {requireUserAction ? (
                 <ItemWithAlert
-                  disabled={isPending}
+                  disabled={isPending || disabledForDemo}
                   label={item.label}
                   iconName={item.icon}
                   isPinned={bookmark.pinned}
+                  disabledForDemo={disabledForDemo}
                   actionFn={() => handleAction(item.label)}
                 />
               ) : (
                 <DropdownMenuItem
-                  disabled={isPending}
+                  disabled={isPending || disabledForDemo}
                   onSelect={() => handleAction(item.label)}
-                  className="group mb-1 gap-2.5 p-2 last:mb-0"
+                  className="group relative mb-1 gap-2.5 p-2 last:mb-0"
                 >
                   <span className="size-4">
                     <Icon
@@ -166,6 +175,7 @@ export const BookmarkSettingsMenu = memo(({ bookmark, onEdit, isPending, setPend
                   <span className="text-muted-foreground group-focus:text-foreground text-sm font-semibold">
                     {item.label}
                   </span>
+                  {disabledForDemo && <UserLockIcon className="left-1" />}
                 </DropdownMenuItem>
               )}
             </Fragment>
@@ -184,6 +194,7 @@ type ItemWithAlertProps = {
   label: ItemLabel;
   actionFn: () => void;
   isPinned?: boolean;
+  disabledForDemo?: boolean;
 };
 
 type AlertKey = Exclude<ItemLabel, "Visit" | "Copy URL" | "Edit" | "Pin" | "Unpin">;
@@ -195,7 +206,14 @@ type Meta = Record<
     actionTitle: AlertKey;
   }
 >;
-const ItemWithAlert = ({ iconName, label, actionFn, isPinned, disabled }: ItemWithAlertProps) => {
+const ItemWithAlert = ({
+  iconName,
+  label,
+  actionFn,
+  isPinned,
+  disabled,
+  disabledForDemo,
+}: ItemWithAlertProps) => {
   const meta: Meta = {
     Archive: {
       title: "Archive bookmark",
@@ -236,7 +254,7 @@ const ItemWithAlert = ({ iconName, label, actionFn, isPinned, disabled }: ItemWi
       <ActionButton
         variant="outline"
         className={cn(
-          "h-auto w-full justify-start gap-2 border-0 p-2 ring-0",
+          "relative h-auto gap-2 border-0 p-2 ring-0",
           "focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0",
         )}
         confirm={confirmOpts}
@@ -251,10 +269,23 @@ const ItemWithAlert = ({ iconName, label, actionFn, isPinned, disabled }: ItemWi
         <span className="text-muted-foreground group-focus:text-foreground text-sm font-semibold">
           {label}
         </span>
+        {disabledForDemo && <UserLockIcon />}
       </ActionButton>
     </DropdownMenuItem>
   );
 };
+
+const UserLockIcon = ({ className }: { className?: string }) => (
+  <span
+    title="Users only"
+    className={cn(
+      "bg-accent absolute -left-1 grid aspect-square size-6 place-items-center rounded-full p-0.5",
+      className,
+    )}
+  >
+    <LockKeyhole className="" />
+  </span>
+);
 
 function handleCopy(url: string) {
   if (navigator.clipboard) {

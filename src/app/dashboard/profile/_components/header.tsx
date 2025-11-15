@@ -5,16 +5,16 @@ import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { Upload } from "lucide-react";
 
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { uploadUserAvatar } from "../actions";
 import { Session } from "@/app/(auth)/lib/auth.client";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { toastAction } from "@/components/toast-action";
 import { ActionButton } from "@/components/action.button";
 import { UserAvatar } from "../../_components/header/user.avatar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { toastAction } from "../../_components/toast-action";
-import { uploadUserAvatar } from "../actions";
+import { UserBadge } from "../../_components/header/user-role.badge";
 
 export const ProfileHeader = ({ user }: { user: Session["user"] }) => {
   const router = useRouter();
@@ -37,19 +37,6 @@ export const ProfileHeader = ({ user }: { user: Session["user"] }) => {
     }
   }, [state]);
 
-  const userBadge = (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Badge className="dark:bg-muted cursor-default text-center whitespace-normal">
-          {user.role}
-        </Badge>
-      </TooltipTrigger>
-      <TooltipContent showArrow align="end">
-        {isdemo ? "Demo account with limited access." : "Basic account"}
-      </TooltipContent>
-    </Tooltip>
-  );
-
   return (
     <Card className="min-h-22 flex-row items-stretch justify-between gap-4 border-none p-4 shadow-none md:p-6">
       {isdemo ? (
@@ -63,8 +50,9 @@ export const ProfileHeader = ({ user }: { user: Session["user"] }) => {
               <p className="text-muted-foreground text-sm">{user.email}</p>
             </div>
           </div>
-
-          {userBadge}
+          <div className="self-start">
+            <UserBadge isDemo={isdemo}>{user.role}</UserBadge>
+          </div>
         </>
       ) : (
         <Form action={action} className="flex w-full items-stretch justify-between gap-4">
@@ -82,7 +70,7 @@ export const ProfileHeader = ({ user }: { user: Session["user"] }) => {
           </div>
 
           <div className="grid justify-items-end self-start">
-            {userBadge}
+            <UserBadge isDemo={isdemo}>{user.role}</UserBadge>
 
             {imageFile && imageFile.size > 0 && (
               <ActionButton
