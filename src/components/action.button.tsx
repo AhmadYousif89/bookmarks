@@ -94,6 +94,7 @@ export const ActionButton = ({
                 "w-auto",
                 buttonProps?.className,
               )}
+              {...props}
             >
               <BtnContent isLoading={isLoading}>{actionText}</BtnContent>
             </Button>
