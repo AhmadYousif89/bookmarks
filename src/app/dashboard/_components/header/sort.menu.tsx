@@ -22,7 +22,7 @@ export const SortMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary" className="h-10.5 gap-1 px-3 py-2.5 sm:min-w-27">
+        <Button variant="secondary" className="h-10.5 gap-1 px-3 py-2.5">
           <Icon name="sort" className="dark:*:stroke-primary-foreground" />
           <span className="max-sm:hidden">Sort by</span>
         </Button>

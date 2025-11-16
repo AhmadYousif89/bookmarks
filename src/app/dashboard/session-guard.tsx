@@ -23,10 +23,16 @@ export function SessionGuard({ children }: Props) {
   const [open, setOpenChange] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
-  const { data } = useSession();
+  const { data, isPending } = useSession();
+  const sessionExists = !!data?.session;
 
   useEffect(() => {
-    if (!data?.session) return;
+    if (isPending) return; // Don't check while session is loading
+    if (!sessionExists) {
+      console.log("No session exists, opening dialog", sessionExists);
+      setOpenChange(true);
+      return;
+    }
 
     const checkStatus = async () => {
       if (inFlightRef.current) return;
@@ -34,7 +40,7 @@ export function SessionGuard({ children }: Props) {
 
       try {
         const session = await getSession();
-        if (session.data == null) {
+        if (!session) {
           setOpenChange(true);
         }
       } catch (err) {
@@ -61,12 +67,12 @@ export function SessionGuard({ children }: Props) {
     document.addEventListener("visibilitychange", onVisibility);
 
     return () => {
-      clearTimeout(timeoutRef.current);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
       window.removeEventListener("keydown", handleActivity);
       window.removeEventListener("click", handleActivity);
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [pathname, data?.session]);
+  }, [pathname, sessionExists, isPending]);
 
   return (
     <>

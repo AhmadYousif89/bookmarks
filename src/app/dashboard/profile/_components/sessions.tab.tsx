@@ -178,12 +178,14 @@ const SessionCard = ({
           </form>
         ) : (
           <Button
+            title="Logout from current session"
             variant="destructive"
-            size="sm"
             onClick={signOut}
-            className="w-auto justify-self-end text-sm"
+            className="size-10 justify-self-end text-sm sm:w-auto"
           >
-            <LogOut className="text-white" /> <span className="hidden sm:block">Logout</span>
+            <LogOut className="text-white" />
+            <span className="sr-only sm:hidden">Logout</span>
+            <span className="hidden sm:block">Logout</span>
           </Button>
         )}
       </div>
