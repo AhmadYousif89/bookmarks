@@ -50,12 +50,13 @@ type Props = {
   isPending: boolean;
 };
 
+const DEMO_RESTRICTED: ItemLabel[] = ["Edit", "Archive", "Unarchive", "Delete Permanently"];
+
 export const BookmarkSettingsMenu = memo(({ bookmark, onEdit, isPending, setPending }: Props) => {
   const { refresh } = useDashboard();
   const { data } = useSession();
 
   const isDemo = !!data?.user?.isDemo;
-  const DEMO_RESTRICTED: ItemLabel[] = ["Edit", "Archive", "Unarchive", "Delete Permanently"];
 
   const handleVisits = async (b: TBookmark) => {
     const res = await updateVisitCount(b.id);
@@ -141,9 +142,7 @@ export const BookmarkSettingsMenu = memo(({ bookmark, onEdit, isPending, setPend
           if (!shouldShowItem(item, bookmark)) {
             return null;
           }
-
           const disabledForDemo = isDemo && DEMO_RESTRICTED.includes(item.label);
-
           const requireUserAction =
             item.label === "Archive" ||
             item.label === "Unarchive" ||
@@ -206,6 +205,29 @@ type Meta = Record<
     actionTitle: AlertKey;
   }
 >;
+
+const meta: Meta = {
+  Archive: {
+    title: "Archive bookmark",
+    description: (pinned?: boolean) =>
+      pinned
+        ? "Are you sure you want to archive this bookmark? Archiving will unpin the bookmark and remove it from the active list."
+        : "Are you sure you want to archive this bookmark?",
+    actionTitle: "Archive",
+  },
+  Unarchive: {
+    title: "Restore bookmark",
+    description: () => "Move this bookmark back to the active list.",
+    actionTitle: "Unarchive",
+  },
+  "Delete Permanently": {
+    title: "Delete bookmark permanently",
+    description: () =>
+      "This action cannot be undone. Are you sure you want to delete this bookmark permanently?",
+    actionTitle: "Delete Permanently",
+  },
+};
+
 const ItemWithAlert = ({
   iconName,
   label,
@@ -214,34 +236,11 @@ const ItemWithAlert = ({
   disabled,
   disabledForDemo,
 }: ItemWithAlertProps) => {
-  const meta: Meta = {
-    Archive: {
-      title: "Archive bookmark",
-      description: (pinned?: boolean) =>
-        pinned
-          ? "Are you sure you want to archive this bookmark? Archiving will unpin the bookmark and remove it from the active list."
-          : "Are you sure you want to archive this bookmark?",
-      actionTitle: "Archive",
-    },
-    Unarchive: {
-      title: "Restore bookmark",
-      description: () => "Move this bookmark back to the active list.",
-      actionTitle: "Unarchive",
-    },
-    "Delete Permanently": {
-      title: "Delete bookmark permanently",
-      description: () =>
-        "This action cannot be undone. Are you sure you want to delete this bookmark permanently?",
-      actionTitle: "Delete Permanently",
-    },
-  };
-
-  const confirmVariant = label === "Delete Permanently" ? "destructive" : "primary";
   const confirmOpts = {
     title: meta[label as AlertKey].title,
     description: meta[label as AlertKey].description(isPinned),
     actionText: meta[label as AlertKey].actionTitle,
-    buttonProps: { variant: confirmVariant } as const,
+    buttonProps: { variant: label === "Delete Permanently" ? "destructive" : "primary" } as const,
   };
 
   return (
