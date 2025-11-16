@@ -5,6 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function titleCase(word: string) {
+  return word.length === 0 ? word : word[0].toUpperCase() + word.slice(1).toLowerCase();
+}
+
 export function formatDate(
   date: Date | string,
   locales: Intl.LocalesArgument = "en-GB",

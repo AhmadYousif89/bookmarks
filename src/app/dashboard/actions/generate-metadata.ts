@@ -1,6 +1,6 @@
 "use server";
 
-import { normalizeUrl } from "@/lib/utils";
+import { normalizeUrl, titleCase } from "@/lib/utils";
 import { fetchFavicon } from "../_lib/util";
 
 const HF_TOKEN = process.env.HF_TOKEN;
@@ -68,6 +68,102 @@ async function query(data: QueryRequest): Promise<HuggingFaceResponse> {
   return result;
 }
 
+function inferTagsFromText(
+  title: string,
+  description: string,
+  url?: string,
+  maxTags = 4,
+): string[] {
+  const stopwords = new Set([
+    "the",
+    "and",
+    "for",
+    "with",
+    "that",
+    "this",
+    "from",
+    "have",
+    "were",
+    "which",
+    "when",
+    "what",
+    "where",
+    "how",
+    "why",
+    "you",
+    "your",
+    "are",
+    "but",
+    "not",
+    "all",
+    "any",
+    "was",
+    "has",
+    "had",
+    "it's",
+    "its",
+    "will",
+    "more",
+    "than",
+    "into",
+    "about",
+    "their",
+    "they",
+    "them",
+    "can",
+    "also",
+    "use",
+    "used",
+    "using",
+    "useful",
+    "usefulness",
+    "other",
+    "site",
+    "page",
+    "article",
+    "blog",
+    "post",
+    "learn",
+    "read",
+    "guide",
+    "tips",
+  ]);
+
+  const text = `${title || ""} ${description || ""}`.toLowerCase();
+  const words = text.match(/\b[a-z]{3,}\b/g) || [];
+
+  const freq = words.reduce<Record<string, number>>((acc, w) => {
+    if (!stopwords.has(w)) acc[w] = (acc[w] || 0) + 1;
+    return acc;
+  }, {});
+
+  const candidates = Object.keys(freq)
+    .sort((a, b) => freq[b] - freq[a])
+    .map(titleCase);
+
+  // Add domain as a candidate if available
+  if (url) {
+    try {
+      const host = new URL(url).hostname;
+      const domain = host.split(".")[0];
+      if (domain && !candidates.includes(titleCase(domain))) {
+        candidates.unshift(titleCase(domain));
+      }
+    } catch {
+      // ignore URL parse errors
+    }
+  }
+
+  // Deduplicate while preserving order
+  const unique: string[] = [];
+  for (const c of candidates) {
+    if (!unique.includes(c)) unique.push(c);
+    if (unique.length >= maxTags) break;
+  }
+
+  return unique;
+}
+
 export type GeneratedAIData = {
   title: string;
   description: string;
@@ -127,13 +223,49 @@ Respond ONLY in JSON format:
         )}&size=256`;
       }
 
+      // Ensure tags exist and meet the 1-4 requirement
+      let tags: string[] = Array.isArray(metadata.tags)
+        ? (metadata.tags as string[])
+            .map((t) => t?.trim())
+            .filter(Boolean)
+            .map(titleCase)
+        : [];
+
+      if (tags.length === 0) {
+        // fallback: infer tags from title/description/domain
+        tags = inferTagsFromText(
+          (metadata.title as string) || "",
+          (metadata.description as string) || "",
+          normalizedUrl,
+          4,
+        );
+      } else {
+        // enforce 1-4 tags and uniqueness
+        const unique: string[] = [];
+        for (const t of tags) {
+          if (!unique.includes(t)) unique.push(t);
+          if (unique.length >= 4) break;
+        }
+        tags = unique;
+      }
+      console.log("unique tags: ", tags);
+      // Guarantee at least one tag (last resort)
+      if (tags.length === 0) {
+        try {
+          const host = new URL(normalizedUrl).hostname;
+          tags = [titleCase(host.split(".")[0] || "Bookmark")];
+        } catch {
+          tags = ["Bookmark"];
+        }
+      }
+
       return {
         success: true,
         data: {
           title: (metadata.title?.trim() as string) || "",
           url: url, // Preserve the original URL and save some API tokens
           description: (metadata.description?.trim() as string) || "",
-          tags: Array.isArray(metadata.tags) ? (metadata.tags as string[]) : [],
+          tags,
           favicon,
         },
       };

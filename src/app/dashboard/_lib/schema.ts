@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { capitalizeFirstLetter } from "better-auth";
+import { titleCase } from "@/lib/utils";
 
 export const BookmarkZodSchema = z.object({
   title: z.string().trim().min(1, "Title is required"),
@@ -14,7 +14,7 @@ export const BookmarkZodSchema = z.object({
     .transform((val) =>
       val
         .split(",")
-        .map((t) => capitalizeFirstLetter(t.trim()))
+        .map((t) => titleCase(t.trim()))
         .filter(Boolean),
     )
     .refine((tags) => tags.length >= 1, "Minimum of 1 tag is required")
