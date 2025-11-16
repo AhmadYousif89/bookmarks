@@ -32,6 +32,7 @@ export type FormState = {
   success: boolean;
   error?: FieldErrorState | null;
   data?: Record<Exclude<FieldNames, "tags">, string> & { tags: string[] };
+  submissionId?: number;
 };
 
 type BookmarkModalProps = {
@@ -42,7 +43,13 @@ type BookmarkModalProps = {
   onOpenChange?: (open: boolean) => void;
 };
 
-const initialState: FormState = { success: false };
+const initialState: FormState = { success: false, submissionId: 0 };
+const initialFormValues = (defaultData?: TBookmark) => ({
+  title: defaultData?.title ?? "",
+  description: defaultData?.description ?? "",
+  url: defaultData?.url ?? "",
+  tags: defaultData?.tags ?? [],
+});
 
 export const BookmarkModal = ({
   actionFn,
@@ -51,42 +58,59 @@ export const BookmarkModal = ({
   open,
   onOpenChange,
 }: BookmarkModalProps) => {
-  const [state, action, isPending] = useActionState((prevState: FormState, data: FormData) => {
-    return actionFn(data);
-  }, initialState);
+  const [state, action, isPending] = useActionState(
+    async (prevState: FormState, data: FormData) => {
+      const r = await actionFn(data);
+      if (r.success) queueMicrotask(() => refresh?.());
+      return { ...r, submissionId: (prevState.submissionId || 0) + 1 };
+    },
+    initialState,
+  );
 
   const { refresh } = useDashboard();
   const formRef = useRef<HTMLFormElement>(null);
+  const handledSuccessRef = useRef<number>(0); // track last handled submissionId
   const [localErrors, setLocalErrors] = useState<FieldErrorState | null>(null);
   const [internalOpen, setInternalOpen] = useState(false);
   const [showUrlInput, setShowUrlInput] = useState(false);
+  const [formValues, setFormValues] = useState(() => initialFormValues(defaultData));
   const [aiData, setAiData] = useState<GeneratedAIData | null>(null);
 
   const isControlled = open !== undefined && onOpenChange !== undefined;
   const actualOpen = isControlled ? open : internalOpen;
+  const isEdit = !!defaultData;
 
   useEffect(() => {
-    setLocalErrors(state.error ?? null);
-  }, [state.error]);
+    setFormValues({
+      title: aiData?.title ?? state.data?.title ?? defaultData?.title ?? "",
+      description: aiData?.description ?? state.data?.description ?? defaultData?.description ?? "",
+      url: aiData?.url ?? state.data?.url ?? defaultData?.url ?? "",
+      tags: aiData?.tags ?? state.data?.tags ?? defaultData?.tags ?? [],
+    });
+  }, [aiData, defaultData, state.data]);
   // Close and clear on success
   useEffect(() => {
     if (!state.success) return;
+    if (handledSuccessRef.current === state.submissionId) return; // already handled
+    handledSuccessRef.current = state.submissionId || 0;
 
-    formRef.current?.reset();
-    setLocalErrors(null);
     setAiData(null);
+    setLocalErrors(null);
     setShowUrlInput(false);
-    if (isControlled) {
-      onOpenChange?.(false);
-    } else {
-      setInternalOpen(false);
-    }
+    setFormValues(initialFormValues(defaultData));
+
+    if (isControlled) onOpenChange?.(false);
+    else setInternalOpen(false);
+
     toastAction({
       label: defaultData ? "Changes saved." : "Bookmark added successfully.",
       icon: "check",
     });
-    refresh?.(); // Refresh dashboard data api route (tags/counts)
-  }, [state.success, defaultData, isControlled, onOpenChange, refresh]);
+  }, [state.success, state.submissionId, defaultData, isControlled, onOpenChange]);
+
+  useEffect(() => {
+    setLocalErrors(state.error ?? null);
+  }, [state.error]);
   // Show a toast for top-level errors (non-field)
   useEffect(() => {
     const message = state.error?.message;
@@ -94,22 +118,10 @@ export const BookmarkModal = ({
     toastAction(message);
   }, [state]);
 
-  const isEdit = !!defaultData;
   const errorMessage = (path: FieldNames) => localErrors?.[path];
   const clearError = (path: FieldNames) =>
     setLocalErrors((prev) => (prev ? { ...prev, [path]: undefined } : prev));
-  // Values to prefill after errors or for edit
-  const values = useMemo(() => {
-    return {
-      title: aiData?.title ?? state.data?.title ?? defaultData?.title ?? "",
-      description: aiData?.description ?? state.data?.description ?? defaultData?.description ?? "",
-      url: aiData?.url ?? state.data?.url ?? defaultData?.url ?? "",
-      tags: aiData?.tags ?? state.data?.tags ?? defaultData?.tags ?? [],
-    };
-  }, [state.data, defaultData, aiData]);
 
-  // Remount field group when values change so uncontrolled inputs pick new defaults
-  const valuesKey = useMemo(() => JSON.stringify(values), [values]);
   // Reset when dialog closes manually
   const handleOpenChange = useCallback(
     (next: boolean) => {
@@ -118,19 +130,15 @@ export const BookmarkModal = ({
         setLocalErrors(null);
         setAiData(null);
         setShowUrlInput(false);
+        setFormValues(initialFormValues(defaultData));
       }
-      if (isControlled) {
-        onOpenChange?.(next);
-      } else {
-        setInternalOpen(next);
-      }
+      if (isControlled) onOpenChange?.(next);
+      else setInternalOpen(next);
     },
-    [onOpenChange],
+    [onOpenChange, isControlled, defaultData],
   );
 
-  const handleAiFormClose = useCallback(() => {
-    setShowUrlInput(false);
-  }, []);
+  const handleAiFormClose = useCallback(() => setShowUrlInput(false), []);
 
   return (
     <Dialog open={actualOpen} onOpenChange={handleOpenChange}>
@@ -182,28 +190,32 @@ export const BookmarkModal = ({
             {aiData?.favicon && <input type="hidden" name="favicon" value={aiData.favicon} />}
             {isEdit && <input type="hidden" name="id" defaultValue={defaultData?.id} />}
             <FieldSet>
-              <FieldGroup key={valuesKey} className="gap-5">
+              <FieldGroup className="gap-5">
                 <TitleInput
-                  title={values.title}
+                  value={formValues.title}
+                  onChange={(v) => setFormValues((s) => ({ ...s, title: v }))}
                   error={!!errorMessage("title")}
                   errorMessage={errorMessage("title") || ""}
                   onClearError={() => clearError("title")}
                 />
                 <DescriptionTextarea
-                  description={values.description}
+                  value={formValues.description}
+                  onChange={(v) => setFormValues((s) => ({ ...s, description: v }))}
                   error={!!errorMessage("description")}
                   errorMessage={errorMessage("description") || ""}
                   onClearError={() => clearError("description")}
                 />
                 <UrlInput
-                  url={values.url}
+                  value={formValues.url}
+                  onChange={(v) => setFormValues((s) => ({ ...s, url: v }))}
                   favicon={aiData?.favicon || defaultData?.favicon}
                   error={!!errorMessage("url")}
                   errorMessage={errorMessage("url") || ""}
                   onClearError={() => clearError("url")}
                 />
                 <TagsInput
-                  tags={values.tags}
+                  value={formValues.tags}
+                  onChange={(v) => setFormValues((s) => ({ ...s, tags: v }))}
                   error={!!errorMessage("tags")}
                   errorMessage={errorMessage("tags") || ""}
                   onClearError={() => clearError("tags")}

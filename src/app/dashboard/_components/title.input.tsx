@@ -8,13 +8,25 @@ import {
 } from "@/components/ui/input-group";
 
 type TitleInputProps = {
-  title?: string;
+  value: string;
+  onChange: (title: string) => void;
   error: boolean;
   errorMessage: string;
   onClearError?: () => void;
 };
 
-export const TitleInput = ({ title, error, errorMessage, onClearError }: TitleInputProps) => {
+export const TitleInput = ({
+  value,
+  error,
+  errorMessage,
+  onClearError,
+  onChange,
+}: TitleInputProps) => {
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.value);
+    onClearError?.();
+  };
+
   return (
     <Field className="gap-1.5 *:[label]:w-fit">
       <FieldLabel htmlFor="title" className="text-foreground gap-0.5 text-sm font-semibold">
@@ -26,8 +38,8 @@ export const TitleInput = ({ title, error, errorMessage, onClearError }: TitleIn
           id="title"
           name="title"
           autoComplete="off"
-          defaultValue={title || ""}
-          onChange={onClearError}
+          value={value}
+          onChange={handleOnChange}
           onFocus={onClearError}
           aria-invalid={error || undefined}
           aria-describedby={error ? "title-error" : undefined}

@@ -20,25 +20,41 @@ const MAX_TAGS = 4;
 
 type TagsInputProps = {
   error: boolean;
-  tags?: TBookmark["tags"];
+  value: TBookmark["tags"];
+  onChange: (tags: string[]) => void;
   errorMessage: string;
   onClearError?: () => void;
 };
 
-export const TagsInput = ({ tags = [], error, errorMessage, onClearError }: TagsInputProps) => {
+export const TagsInput = ({
+  value,
+  error,
+  errorMessage,
+  onClearError,
+  onChange,
+}: TagsInputProps) => {
   const [inputValue, setInputValue] = useState("");
-  const [selectedTags, setSelectedTags] = useState<string[]>(tags);
+  const [selectedTags, setSelectedTags] = useState<string[]>(value || []);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  // Flag to indicate changes originated from user interaction inside this component.
+  const isInternalChange = useRef(false);
 
+  // Notify parent of selected tags change
+  useEffect(() => {
+    if (isInternalChange.current) {
+      onChange(selectedTags);
+      isInternalChange.current = false;
+    }
+  }, [selectedTags, onChange]);
   // Sync internal state when parent-provided tags change (e.g., after a failed submit)
   useEffect(() => {
-    setSelectedTags(tags);
-  }, [JSON.stringify(tags)]);
+    setSelectedTags(value);
+  }, [JSON.stringify(value)]);
   // Close suggestions on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -96,7 +112,6 @@ export const TagsInput = ({ tags = [], error, errorMessage, onClearError }: Tags
     const normalized = tag.trim();
     if (!normalized || selectedTags.includes(normalized) || selectedTags.length >= MAX_TAGS) return;
     setSelectedTags((prev) => [...prev, normalized]);
-    // Clear input and close suggestions
     setInputValue("");
     setShowSuggestions(false);
     onClearError?.();

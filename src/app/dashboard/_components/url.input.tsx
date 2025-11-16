@@ -10,14 +10,27 @@ import { Icon } from "@/components/ui/icon";
 import { Field, FieldLabel, FieldError } from "@/components/ui/field";
 
 type UrlInputProps = {
-  url?: string;
+  value: string;
+  onChange: (url: string) => void;
   favicon?: string;
   error: boolean;
   errorMessage: string;
   onClearError?: () => void;
 };
 
-export const UrlInput = ({ url, favicon, error, errorMessage, onClearError }: UrlInputProps) => {
+export const UrlInput = ({
+  value,
+  favicon,
+  error,
+  errorMessage,
+  onClearError,
+  onChange,
+}: UrlInputProps) => {
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.value);
+    onClearError?.();
+  };
+
   return (
     <Field className="gap-1.5 *:[label]:w-fit">
       <FieldLabel htmlFor="url" className="text-foreground gap-0.5 text-sm font-semibold">
@@ -41,9 +54,9 @@ export const UrlInput = ({ url, favicon, error, errorMessage, onClearError }: Ur
           id="url"
           name="url"
           autoComplete="off"
-          defaultValue={url || ""}
           placeholder="https://"
-          onChange={onClearError}
+          value={value}
+          onChange={handleOnChange}
           onFocus={onClearError}
           aria-invalid={error || undefined}
           aria-describedby={error ? "url-error" : undefined}

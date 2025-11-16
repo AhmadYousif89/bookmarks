@@ -14,18 +14,20 @@ const MAX_DESCRIPTION_LENGTH = 280;
 
 type DescriptionTextareaProps = {
   error: boolean;
-  description?: string;
+  value: string;
+  onChange: (description: string) => void;
   errorMessage: string;
   onClearError?: () => void;
 };
 
 export const DescriptionTextarea = ({
   error,
-  description,
+  value,
+  onChange,
   errorMessage,
   onClearError,
 }: DescriptionTextareaProps) => {
-  const truncatedDescription = description?.slice(0, MAX_DESCRIPTION_LENGTH) || ""; // Ensure initial value is within limit
+  const truncatedDescription = value.slice(0, MAX_DESCRIPTION_LENGTH) || ""; // Ensure initial value is within limit
   const [charCount, setCharCount] = useState(truncatedDescription.length);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -35,6 +37,7 @@ export const DescriptionTextarea = ({
       e.target.value = value;
     }
     setCharCount(value.length);
+    onChange(value);
   };
 
   return (
@@ -48,7 +51,7 @@ export const DescriptionTextarea = ({
           id="description"
           name="description"
           onChange={handleChange}
-          defaultValue={truncatedDescription}
+          value={truncatedDescription}
           onFocus={onClearError}
           aria-invalid={error || undefined}
           aria-describedby={error ? "description-error" : undefined}
