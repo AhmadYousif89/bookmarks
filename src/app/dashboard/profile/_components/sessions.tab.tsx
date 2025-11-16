@@ -71,10 +71,11 @@ export function SessionsTab({ isDemo, sessions, currentSessionToken }: Props) {
         {otherSessions.length > 0 && (
           <form className="mt-6" onSubmit={revokeOtherSessions}>
             <ActionButton
+              type="submit"
               variant="destructive"
               isPending={isRevokingAll}
               disabled={isDemo || isRevokingAll}
-              className="w-auto px-4 text-sm"
+              className="w-auto text-sm"
             >
               Revoke all other sessions
             </ActionButton>

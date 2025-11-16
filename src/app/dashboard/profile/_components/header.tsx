@@ -37,7 +37,7 @@ export const ProfileHeader = ({ user }: { user: Session["user"] }) => {
   }, [state]);
 
   return (
-    <Card className="min-h-26 flex-row items-stretch justify-between gap-4 border-none p-4 shadow-none md:p-6">
+    <Card className="min-h-26 flex-row items-center justify-between gap-4 border-none p-4 shadow-none md:p-6">
       {isdemo ? (
         <>
           <div className="flex items-center gap-4">
@@ -54,7 +54,7 @@ export const ProfileHeader = ({ user }: { user: Session["user"] }) => {
           </div>
         </>
       ) : (
-        <Form action={action} className="flex w-full items-stretch justify-between gap-4">
+        <Form action={action} className="flex min-h-14 w-full items-start justify-between gap-4">
           <div className="flex items-center gap-4">
             <UserImagePicker
               name={user.name}
@@ -162,7 +162,7 @@ export const UserImagePicker = ({ name, image, inputName, onFileSelected }: Prop
   const handleClearPreview = () => {
     setPreview((prev) => {
       if (prev && prev.startsWith("blob:")) URL.revokeObjectURL(prev);
-      return null;
+      return image || null;
     });
     onFileSelected?.(null);
     if (inputRef.current) inputRef.current.value = "";
@@ -175,10 +175,12 @@ export const UserImagePicker = ({ name, image, inputName, onFileSelected }: Prop
           type="button"
           size="auto"
           variant="destructive"
+          title="Remove image"
           onClick={handleClearPreview}
           className="absolute -top-2.5 -left-2.5 z-20 w-fit rounded-full p-0.5"
         >
           <X className="size-3.5" />
+          <span className="sr-only">Remove selected profile image</span>
         </Button>
       )}
       <Tooltip open={tooltipOpen} onOpenChange={handleTooltipOpenChange}>
@@ -192,7 +194,7 @@ export const UserImagePicker = ({ name, image, inputName, onFileSelected }: Prop
             onPointerEnter={handlePointerEnter}
             onPointerLeave={handlePointerLeave}
             aria-label="Select profile image"
-            className="size-fit cursor-pointer overflow-hidden rounded-none p-0"
+            className="size-fit cursor-pointer overflow-hidden rounded-full p-0"
           >
             <UserAvatar name={name} image={preview || undefined} />
           </Button>

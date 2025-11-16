@@ -7,7 +7,7 @@ import { ProfileHeader } from "./header";
 import { ProfileTab } from "./profile.tab";
 import { AccountTab } from "./account.tab";
 import { SecurityTab } from "./security.tab";
-import { SessionsTab } from "./sessions.tsb";
+import { SessionsTab } from "./sessions.tab";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
