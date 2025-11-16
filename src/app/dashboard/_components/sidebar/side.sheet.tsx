@@ -22,7 +22,10 @@ export const SideSheet = () => {
 
   const sheetContent = (
     <>
-      <div className="w-fit p-5 pb-2.5">
+      <div className="p-5 pb-2.5 lg:hidden">
+        <Logo closeSheet={closeSheet} useAnchor />
+      </div>
+      <div className="hidden p-5 pb-2.5 lg:block">
         <Logo closeSheet={closeSheet} />
       </div>
       <div className="flex grow flex-col gap-4 px-4 pb-5">
@@ -41,12 +44,10 @@ export const SideSheet = () => {
               <Icon name="menu-hamburger" className="dark:*:stroke-foreground" />
             </Button>
           </SheetTrigger>
-          {isOpen && (
-            <SheetContent className="max-w-sidebar lg:hidden" side="left">
-              <SheetTitle aria-hidden />
-              {sheetContent}
-            </SheetContent>
-          )}
+          <SheetContent className="max-w-sidebar lg:hidden" side="left">
+            <SheetTitle aria-hidden />
+            {sheetContent}
+          </SheetContent>
         </Sheet>
       </nav>
 

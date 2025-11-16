@@ -4,9 +4,10 @@ import { cn } from "@/lib/utils";
 type Props = {
   className?: string;
   closeSheet?: () => void;
+  useAnchor?: boolean;
 };
 
-export const Logo = ({ className, closeSheet }: Props) => {
+export const Logo = ({ className, closeSheet, useAnchor }: Props) => {
   const styles = cn(
     "inline-flex w-fit outline-none",
     "focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2",
@@ -22,8 +23,16 @@ export const Logo = ({ className, closeSheet }: Props) => {
     </div>
   );
 
+  if (useAnchor) {
+    return (
+      <a href="/" className={styles}>
+        {content}
+      </a>
+    );
+  }
+
   return (
-    <Link href="/" onClick={closeSheet} className={styles}>
+    <Link href="/" className={styles}>
       {content}
     </Link>
   );
