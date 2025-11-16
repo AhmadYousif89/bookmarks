@@ -22,18 +22,23 @@ export const ProfileHeader = ({ user }: { user: Session["user"] }) => {
     { success: false, message: "" },
   );
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const lastImageRef = useRef<string | null>(null);
 
   const isdemo = user.isDemo || false;
   const uploadedImageUrl = state.success ? state.imageUrl : null;
 
   useEffect(() => {
-    if (state.message) {
-      if (state.success) {
-        toastAction({ label: state.message, icon: "check" });
-        setImageFile(null);
-        router.refresh();
-      } else toastAction(state.message);
+    const { success, message, imageUrl } = state;
+    if (!success) {
+      if (message) toastAction(message);
+      lastImageRef.current = null;
+      return;
     }
+    if (imageUrl && lastImageRef.current === imageUrl) return;
+    if (message) toastAction({ label: message, icon: "check" });
+    lastImageRef.current = imageUrl ?? null;
+    setImageFile(null);
+    router.refresh();
   }, [state]);
 
   return (

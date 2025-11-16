@@ -34,6 +34,8 @@ export function AccountTab({ isDemo }: { isDemo: boolean }) {
     }
   };
 
+  const shouldDisable = isDemo || isDeleting || !confirmText || hasError;
+
   return (
     <Card className="border-none p-5">
       <CardHeader className="bg-muted rounded-md py-4">
@@ -59,9 +61,9 @@ export function AccountTab({ isDemo }: { isDemo: boolean }) {
             description: "This action cannot be undone. All your data will be permanently deleted.",
           }}
           variant="destructive"
-          isPending={isDeleting}
           onAction={handleUserDelete}
-          disabled={isDemo || !confirmText || hasError}
+          disabled={shouldDisable}
+          isPending={isDeleting}
           className="text-sm"
         >
           Delete account
