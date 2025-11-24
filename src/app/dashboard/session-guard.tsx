@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import {
@@ -18,7 +17,6 @@ import { getSession, useSession } from "@/app/(auth)/lib/auth.client";
 type Props = { children: React.ReactNode };
 
 export function SessionGuard({ children }: Props) {
-  const pathname = usePathname();
   const inFlightRef = useRef(false);
   const [open, setOpenChange] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -27,37 +25,35 @@ export function SessionGuard({ children }: Props) {
   const sessionExists = !!data?.session;
 
   useEffect(() => {
-    if (isPending) return; // Don't check while session is loading
+    if (isPending) return;
     if (!sessionExists) {
-      console.log("No session exists, opening dialog", sessionExists);
       setOpenChange(true);
       return;
     }
 
-    const checkStatus = async () => {
+    async function checkStatus() {
       if (inFlightRef.current) return;
       inFlightRef.current = true;
 
       try {
-        const session = await getSession();
-        if (!session) {
-          setOpenChange(true);
-        }
+        const { data } = await getSession();
+        if (!data?.session) setOpenChange(true);
+        else setOpenChange(false);
+
       } catch (err) {
         console.error("Error checking auth status", err);
-        setOpenChange(true); // Assume session expired if error
+        setOpenChange(true);
       } finally {
         inFlightRef.current = false;
       }
     };
 
-    checkStatus(); // Initial check on mount/pathname change
+    checkStatus();
     const handleActivity = () => {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = setTimeout(checkStatus, 3000);
     };
 
-    // Check when tab becomes active
     const onVisibility = () => {
       if (document.visibilityState === "visible") checkStatus();
     };
@@ -72,7 +68,7 @@ export function SessionGuard({ children }: Props) {
       window.removeEventListener("click", handleActivity);
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [pathname, sessionExists, isPending]);
+  }, [sessionExists, isPending]);
 
   return (
     <>
