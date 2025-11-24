@@ -254,7 +254,7 @@ export const BookmarkModal = ({
               </DialogClose>
               <ActionButton type="submit" isPending={isPending} disabled={isDemo || isPending}>
                 {isEdit ? "Edit Bookmark" : "Add Bookmark"}
-                {isDemo && <UserLockIcon className="p-1" />}
+                {isDemo && <UserLockIcon className="text-foreground p-1" />}
               </ActionButton>
             </div>
           </Form>

@@ -132,7 +132,7 @@ export function SecurityTab({ isDemo }: { isDemo: boolean }) {
 
           <CardFooter className="mt-4 gap-4 px-0">
             <ActionButton type="submit" disabled={isDemo || pending} className="text-sm">
-              Update password {isDemo && <UserLockIcon className="p-1" />}
+              Update password {isDemo && <UserLockIcon className="text-foreground p-1" />}
             </ActionButton>
             {state.success && (
               <p className="text-muted-foreground dark:text-foreground bg-muted rounded px-4 py-2 text-xs font-medium">

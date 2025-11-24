@@ -138,7 +138,7 @@ export function ProfileTab({ user }: { user: Session["user"] }) {
               isPending={form.loading}
               className="text-sm"
             >
-              Save changes {user.isDemo && <UserLockIcon className="p-1" />}
+              Save changes {user.isDemo && <UserLockIcon className="text-foreground p-1" />}
             </ActionButton>
 
             {form.success && (
