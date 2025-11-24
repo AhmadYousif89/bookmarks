@@ -41,7 +41,7 @@ export const SideSheetLinks = () => {
               asChild
               variant="navLink"
               className={cn(
-                "justify-between pr-3",
+                "w-full justify-between pr-3",
                 match(link.href) && "bg-accent text-foreground",
               )}
             >

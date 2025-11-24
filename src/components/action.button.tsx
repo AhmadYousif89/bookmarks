@@ -110,16 +110,16 @@ const BtnContent = ({ children, isLoading }: { isLoading: boolean; children: Rea
     <Spinner
       className={cn(
         "absolute inset-0 m-auto size-6 opacity-0 transition-opacity duration-150 ease-out",
-        isLoading ? "visible scale-100 opacity-100" : "invisible scale-0 opacity-0",
+        isLoading && "visible scale-100 opacity-100",
       )}
     />
-    <span
+    <div
       className={cn(
-        "inline-flex items-center justify-between gap-2 transition-opacity duration-150",
-        isLoading ? "invisible scale-0 opacity-0" : "visible scale-100 opacity-100",
+        "inline-flex h-full items-center gap-2 text-center transition-opacity duration-150",
+        isLoading && "invisible scale-0 opacity-0",
       )}
     >
       {children}
-    </span>
+    </div>
   </>
 );

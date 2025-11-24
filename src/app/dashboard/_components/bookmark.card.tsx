@@ -34,7 +34,7 @@ export const BookmarkCard = ({ bookmark }: { bookmark: TBookmark }) => {
 
   return (
     <>
-      <article className="relative flex min-h-[272px] flex-col gap-3">
+      <article className="relative grid min-h-[272px]">
         <Card className="grow gap-4 border-none pt-4 pb-3">
           <div className="px-4">
             <CardHeader className="border-muted flex flex-row gap-3 border-b px-0">
