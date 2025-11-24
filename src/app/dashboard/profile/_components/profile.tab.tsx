@@ -15,6 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { authClient, Session } from "@/app/(auth)/lib/auth.client";
+import { UserLockIcon } from "@/components/user-lock";
 
 type FormState = {
   name: string;
@@ -137,7 +138,7 @@ export function ProfileTab({ user }: { user: Session["user"] }) {
               isPending={form.loading}
               className="text-sm"
             >
-              Save changes
+              Save changes {user.isDemo && <UserLockIcon className="p-1" />}
             </ActionButton>
 
             {form.success && (

@@ -25,10 +25,12 @@ import { TitleInput } from "./title.input";
 import { useDashboard } from "../dashboard.context";
 import { GeneratedAIData } from "../actions/generate-metadata";
 import { GenerateMetadataForm } from "./generate-metadata.form";
+import { useSession } from "@/app/(auth)/lib/auth.client";
+import { UserLockIcon } from "@/components/user-lock";
 
-export type FieldNames = "title" | "description" | "url" | "tags";
+type FieldNames = "title" | "description" | "url" | "tags";
 export type FieldErrorState = Partial<Record<FieldNames | "message", string>>;
-export type FormState = {
+type FormState = {
   success: boolean;
   error?: FieldErrorState | null;
   data?: Record<Exclude<FieldNames, "tags">, string> & { tags: string[] };
@@ -67,37 +69,47 @@ export const BookmarkModal = ({
     initialState,
   );
 
+  const { data } = useSession();
   const { refresh } = useDashboard();
   const formRef = useRef<HTMLFormElement>(null);
   const handledSuccessRef = useRef<number>(0); // track last handled submissionId
-  const [localErrors, setLocalErrors] = useState<FieldErrorState | null>(null);
   const [internalOpen, setInternalOpen] = useState(false);
-  const [showUrlInput, setShowUrlInput] = useState(false);
-  const [formValues, setFormValues] = useState(() => initialFormValues(defaultData));
+  const [showAiForm, setShowAiForm] = useState(false);
+  const [formState, setFormState] = useState(() => ({
+    values: initialFormValues(defaultData),
+    errors: null as FieldErrorState | null,
+  }));
   const [aiData, setAiData] = useState<GeneratedAIData | null>(null);
 
   const isControlled = open !== undefined && onOpenChange !== undefined;
   const actualOpen = isControlled ? open : internalOpen;
   const isEdit = !!defaultData;
+  const isDemo = data?.user?.role === "demo";
 
   useEffect(() => {
-    setFormValues({
-      title: aiData?.title ?? state.data?.title ?? defaultData?.title ?? "",
-      description: aiData?.description ?? state.data?.description ?? defaultData?.description ?? "",
-      url: aiData?.url ?? state.data?.url ?? defaultData?.url ?? "",
-      tags: aiData?.tags ?? state.data?.tags ?? defaultData?.tags ?? [],
-    });
+    setFormState((prev) => ({
+      ...prev,
+      values: {
+        title: aiData?.title ?? state.data?.title ?? defaultData?.title ?? "",
+        description:
+          aiData?.description ?? state.data?.description ?? defaultData?.description ?? "",
+        url: aiData?.url ?? state.data?.url ?? defaultData?.url ?? "",
+        tags: aiData?.tags ?? state.data?.tags ?? defaultData?.tags ?? [],
+      },
+    }));
   }, [aiData, defaultData, state.data]);
-  // Close and clear on success
+
   useEffect(() => {
     if (!state.success) return;
-    if (handledSuccessRef.current === state.submissionId) return; // already handled
+    if (handledSuccessRef.current === state.submissionId) return;
     handledSuccessRef.current = state.submissionId || 0;
 
     setAiData(null);
-    setLocalErrors(null);
-    setShowUrlInput(false);
-    setFormValues(initialFormValues(defaultData));
+    setShowAiForm(false);
+    setFormState({
+      values: initialFormValues(defaultData),
+      errors: null,
+    });
 
     if (isControlled) onOpenChange?.(false);
     else setInternalOpen(false);
@@ -109,8 +121,9 @@ export const BookmarkModal = ({
   }, [state.success, state.submissionId, defaultData, isControlled, onOpenChange]);
 
   useEffect(() => {
-    setLocalErrors(state.error ?? null);
+    setFormState((prev) => ({ ...prev, errors: state.error ?? null }));
   }, [state.error]);
+
   // Show a toast for top-level errors (non-field)
   useEffect(() => {
     const message = state.error?.message;
@@ -118,19 +131,24 @@ export const BookmarkModal = ({
     toastAction(message);
   }, [state]);
 
-  const errorMessage = (path: FieldNames) => localErrors?.[path];
+  const errorMessage = (path: FieldNames) => formState.errors?.[path];
   const clearError = (path: FieldNames) =>
-    setLocalErrors((prev) => (prev ? { ...prev, [path]: undefined } : prev));
+    setFormState((prev) => ({
+      ...prev,
+      errors: prev.errors ? { ...prev.errors, [path]: undefined } : prev.errors,
+    }));
 
   // Reset when dialog closes manually
   const handleOpenChange = useCallback(
     (next: boolean) => {
       if (!next) {
         formRef.current?.reset();
-        setLocalErrors(null);
         setAiData(null);
-        setShowUrlInput(false);
-        setFormValues(initialFormValues(defaultData));
+        setShowAiForm(false);
+        setFormState({
+          values: initialFormValues(defaultData),
+          errors: null,
+        });
       }
       if (isControlled) onOpenChange?.(next);
       else setInternalOpen(next);
@@ -138,7 +156,7 @@ export const BookmarkModal = ({
     [onOpenChange, isControlled, defaultData],
   );
 
-  const handleAiFormClose = useCallback(() => setShowUrlInput(false), []);
+  const handleAiFormClose = useCallback(() => setShowAiForm(false), []);
 
   return (
     <Dialog open={actualOpen} onOpenChange={handleOpenChange}>
@@ -157,29 +175,29 @@ export const BookmarkModal = ({
       <DialogContent className="bg-card gap-8 rounded-2xl px-5 py-6 md:p-8">
         <DialogHeader>
           <DialogTitle className="text-xl leading-8.5 font-bold">
-            {showUrlInput ? "Generate with AI" : isEdit ? "Edit Bookmark" : "Add Bookmark"}
+            {showAiForm ? "Generate with AI" : isEdit ? "Edit Bookmark" : "Add Bookmark"}
           </DialogTitle>
           <DialogDescription className="flex items-center justify-between gap-2">
             <span>
-              {showUrlInput
+              {showAiForm
                 ? "Enter a URL to generate your bookmark's metadata using AI."
                 : isEdit
                   ? "Update your saved link details — change the title, description, URL, or tags anytime."
                   : "Save a link with details to keep your collection organized."}
             </span>
-            {!isEdit && !showUrlInput && (
-              <Button variant="link" size="auto" onClick={() => setShowUrlInput(true)}>
+            {!isEdit && !showAiForm && (
+              <Button variant="link" size="auto" onClick={() => setShowAiForm(true)}>
                 Try with AI 🤖
               </Button>
             )}
           </DialogDescription>
         </DialogHeader>
-        {showUrlInput ? (
+        {showAiForm ? (
           <GenerateMetadataForm
             closeAiForm={handleAiFormClose}
             onSuccess={(data) => {
               setAiData(data);
-              setShowUrlInput(false);
+              setShowAiForm(false);
             }}
             onError={(err) => {
               toastAction(err);
@@ -192,30 +210,36 @@ export const BookmarkModal = ({
             <FieldSet>
               <FieldGroup className="gap-5">
                 <TitleInput
-                  value={formValues.title}
-                  onChange={(v) => setFormValues((s) => ({ ...s, title: v }))}
+                  value={formState.values.title}
+                  onChange={(v) =>
+                    setFormState((s) => ({ ...s, values: { ...s.values, title: v } }))
+                  }
                   error={!!errorMessage("title")}
                   errorMessage={errorMessage("title") || ""}
                   onClearError={() => clearError("title")}
                 />
                 <DescriptionTextarea
-                  value={formValues.description}
-                  onChange={(v) => setFormValues((s) => ({ ...s, description: v }))}
+                  value={formState.values.description}
+                  onChange={(v) =>
+                    setFormState((s) => ({ ...s, values: { ...s.values, description: v } }))
+                  }
                   error={!!errorMessage("description")}
                   errorMessage={errorMessage("description") || ""}
                   onClearError={() => clearError("description")}
                 />
                 <UrlInput
-                  value={formValues.url}
-                  onChange={(v) => setFormValues((s) => ({ ...s, url: v }))}
+                  value={formState.values.url}
+                  onChange={(v) => setFormState((s) => ({ ...s, values: { ...s.values, url: v } }))}
                   favicon={aiData?.favicon || defaultData?.favicon}
                   error={!!errorMessage("url")}
                   errorMessage={errorMessage("url") || ""}
                   onClearError={() => clearError("url")}
                 />
                 <TagsInput
-                  value={formValues.tags}
-                  onChange={(v) => setFormValues((s) => ({ ...s, tags: v }))}
+                  value={formState.values.tags}
+                  onChange={(v) =>
+                    setFormState((s) => ({ ...s, values: { ...s.values, tags: v } }))
+                  }
                   error={!!errorMessage("tags")}
                   errorMessage={errorMessage("tags") || ""}
                   onClearError={() => clearError("tags")}
@@ -228,8 +252,9 @@ export const BookmarkModal = ({
                   Cancel
                 </Button>
               </DialogClose>
-              <ActionButton type="submit" isPending={isPending} disabled={isPending}>
+              <ActionButton type="submit" isPending={isPending} disabled={isDemo || isPending}>
                 {isEdit ? "Edit Bookmark" : "Add Bookmark"}
+                {isDemo && <UserLockIcon className="p-1" />}
               </ActionButton>
             </div>
           </Form>

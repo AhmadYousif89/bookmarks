@@ -27,6 +27,7 @@ import { deleteBookmarkAction } from "../actions/delete";
 import { useDashboard } from "../dashboard.context";
 import { useSession } from "@/app/(auth)/lib/auth.client";
 import { toastAction } from "@/components/toast-action";
+import { UserLockIcon } from "@/components/user-lock";
 
 const visibilityMap: Record<ItemLabelKeys, (bookmark: TBookmark) => boolean> = {
   Visit: () => true,
@@ -50,7 +51,7 @@ type Props = {
   isPending: boolean;
 };
 
-const DEMO_RESTRICTED: ItemLabel[] = ["Edit", "Archive", "Unarchive", "Delete Permanently"];
+const DEMO_RESTRICTED: ItemLabel[] = ["Delete Permanently"];
 
 export const BookmarkSettingsMenu = memo(({ bookmark, onEdit, isPending, setPending }: Props) => {
   const { refresh } = useDashboard();
@@ -259,32 +260,23 @@ const ItemWithAlert = ({
         confirm={confirmOpts}
         onAction={actionFn}
       >
-        <span className="size-4">
-          <Icon
-            name={iconName}
-            className="**:stroke-muted-foreground group-focus:**:stroke-foreground dark:group-focus:**:stroke-foreground scale-80"
-          />
-        </span>
+        {disabledForDemo ? (
+          <UserLockIcon />
+        ) : (
+          <span className="size-4">
+            <Icon
+              name={iconName}
+              className="**:stroke-muted-foreground group-focus:**:stroke-foreground dark:group-focus:**:stroke-foreground scale-80"
+            />
+          </span>
+        )}
         <span className="text-muted-foreground group-focus:text-foreground text-sm font-semibold">
           {label}
         </span>
-        {disabledForDemo && <UserLockIcon />}
       </ActionButton>
     </DropdownMenuItem>
   );
 };
-
-const UserLockIcon = ({ className }: { className?: string }) => (
-  <span
-    title="Users only"
-    className={cn(
-      "bg-accent absolute -left-1 grid aspect-square size-6 place-items-center rounded-full p-0.5",
-      className,
-    )}
-  >
-    <LockKeyhole className="" />
-  </span>
-);
 
 function handleCopy(url: string) {
   if (navigator.clipboard) {

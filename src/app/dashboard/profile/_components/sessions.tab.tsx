@@ -14,6 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { ActionButton } from "@/components/action.button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { UserLockIcon } from "@/components/user-lock";
 
 type Props = {
   isDemo: boolean;
@@ -77,7 +78,8 @@ export function SessionsTab({ isDemo, sessions, currentSessionToken }: Props) {
               disabled={isDemo || isRevokingAll}
               className="w-auto text-sm"
             >
-              Revoke all other sessions
+              Revoke all other sessions{" "}
+              {isDemo && <UserLockIcon className="text-destructive bg-white p-1" />}
             </ActionButton>
           </form>
         )}
@@ -172,7 +174,11 @@ const SessionCard = ({
               isPending={isLoading}
               className="w-auto gap-0 text-sm"
             >
-              <Trash2 className="sm:mr-2" />
+              {isDemo ? (
+                <UserLockIcon className="text-destructive bg-white p-1" />
+              ) : (
+                <Trash2 className="sm:mr-2" />
+              )}
               <span className="hidden sm:block">Revoke session</span>
             </ActionButton>
           </form>

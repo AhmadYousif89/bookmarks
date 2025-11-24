@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { ActionButton } from "@/components/action.button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { authClient } from "@/app/(auth)/lib/auth.client";
+import { UserLockIcon } from "@/components/user-lock";
 
 export function AccountTab({ isDemo }: { isDemo: boolean }) {
   const [confirmText, setConfirmText] = useState("");
@@ -64,9 +65,9 @@ export function AccountTab({ isDemo }: { isDemo: boolean }) {
           onAction={handleUserDelete}
           disabled={shouldDisable}
           isPending={isDeleting}
-          className="text-sm"
+          className="w-fit text-sm"
         >
-          Delete account
+          Delete account {isDemo && <UserLockIcon className="text-destructive bg-white p-1" />}
         </ActionButton>
       </CardContent>
     </Card>
