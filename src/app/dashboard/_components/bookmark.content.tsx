@@ -62,8 +62,12 @@ export const BookmarkContent = ({ data, hasQuery, hasTags, hasValidPage, isArchi
 
   return (
     <div className="grid grid-cols-[repeat(auto-fill,minmax(336px,1fr))] gap-4 md:gap-8">
-      {data.map((bookmark) => (
-        <BookmarkCard key={bookmark.id} bookmark={bookmark} />
+      {data.map((bookmark, idx) => (
+        <BookmarkCard
+          key={bookmark.id}
+          bookmark={bookmark}
+          style={{ animationDelay: `${idx * 0.1}s` }}
+        />
       ))}
     </div>
   );

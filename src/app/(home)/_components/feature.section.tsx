@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { Zap, Tag, Search, Cloud, Palette, Lock } from "lucide-react";
 
 const FEATURES = [
@@ -40,21 +40,32 @@ export const FeatureSection = () => {
       <h2 className="mb-8 text-center text-xl font-bold md:mb-16 lg:text-[2.5rem]">
         Powerful Features
       </h2>
-      <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 md:gap-8 lg:grid-cols-3">
         {FEATURES.map((feature, idx) => (
-          <Card
+          <div
             key={idx}
-            className="border-muted hover:border-ring relative overflow-hidden rounded-2xl border p-5 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
+            style={{ animationDelay: `${idx * 0.1}s` }}
+            className={cn(
+              "bg-card group row-span-3 grid cursor-default grid-rows-subgrid gap-0 overflow-hidden",
+              "rounded-2xl border-2 border-transparent p-5 transition-all duration-300",
+              "hover:border-ring/50 hover:-translate-y-2 hover:shadow-xl",
+              "active:border-ring/50 active:-translate-y-2 active:shadow-xl",
+              "animate-fade-in-blur",
+            )}
           >
-            <div className="to-muted from-primary absolute inset-0 bg-linear-to-b opacity-0 transition-opacity duration-300" />
-            <div>
-              <div className="bg-primary dark:bg-accent mb-4 flex size-10 items-center justify-center rounded-xl shadow">
-                <feature.icon className="dark:text-muted-foreground size-5 text-white" />
-              </div>
-              <h3 className="mb-2 text-base leading-1.5 font-semibold">{feature.title}</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">{feature.desc}</p>
+            <div
+              className={cn(
+                "absolute inset-0 -z-10 opacity-0 transition-opacity duration-300",
+                "from-primary/5 dark:to-background bg-linear-to-bl to-white",
+                "group-hover:opacity-100 group-active:opacity-100",
+              )}
+            />
+            <div className="bg-primary dark:bg-accent mb-4 flex size-10 items-center justify-center rounded-lg shadow">
+              <feature.icon className="dark:text-muted-foreground size-5 text-white" />
             </div>
-          </Card>
+            <h3 className="mb-2 text-base leading-1.5 font-semibold">{feature.title}</h3>
+            <p className="text-muted-foreground text-sm leading-relaxed">{feature.desc}</p>
+          </div>
         ))}
       </div>
     </section>

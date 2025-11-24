@@ -3,7 +3,6 @@ import { headers } from "next/headers";
 import { ArrowRight, Bookmark, Check, Sparkles } from "lucide-react";
 
 import { auth } from "@/app/(auth)/lib/auth";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StartDemoButton } from "./demo.button";
 
@@ -39,10 +38,10 @@ export const HeroSection = async () => {
           </div>
         </div>
 
-        <Card className="gap-3 self-end rounded-2xl px-5 shadow-xl">
-          <div className="bg-accent flex items-center gap-3 rounded-lg p-4">
-            <div className="bg-primary/20 dark:bg-muted flex h-10 w-10 items-center justify-center rounded-lg">
-              <Bookmark className="text-muted-foreground size-5" />
+        <div className="bg-card grid gap-4 self-end overflow-hidden rounded-2xl p-5 shadow-xl">
+          <div className="bg-accent animate-fade-in-blur flex items-center gap-3 rounded-lg p-4 shadow-md">
+            <div className="bg-primary/20 dark:bg-muted flex size-8 items-center justify-center rounded-md">
+              <Bookmark className="text-muted-foreground fill-background size-5 dark:fill-teal-800" />
             </div>
             <div className="flex-1">
               <div className="text-sm font-medium">Design Inspiration</div>
@@ -50,9 +49,9 @@ export const HeroSection = async () => {
             </div>
             <Check className="text-muted-foreground size-5" />
           </div>
-          <div className="bg-accent flex items-center gap-3 rounded-lg p-4">
-            <div className="bg-primary/20 dark:bg-muted flex h-10 w-10 items-center justify-center rounded-lg">
-              <Bookmark className="text-muted-foreground size-5" />
+          <div className="bg-accent animate-fade-in-blur flex items-center gap-3 rounded-lg p-4 shadow-md delay-200!">
+            <div className="bg-primary/20 dark:bg-muted flex size-8 items-center justify-center rounded-md">
+              <Bookmark className="text-muted-foreground fill-background size-5 dark:fill-teal-800" />
             </div>
             <div className="flex-1">
               <div className="text-sm font-medium">React Documentation</div>
@@ -60,9 +59,9 @@ export const HeroSection = async () => {
             </div>
             <Check className="text-muted-foreground size-5" />
           </div>
-          <div className="bg-accent flex items-center gap-3 rounded-lg p-4">
-            <div className="bg-primary/20 dark:bg-muted flex h-10 w-10 items-center justify-center rounded-lg">
-              <Bookmark className="text-muted-foreground size-5" />
+          <div className="bg-accent animate-fade-in-blur flex items-center gap-3 rounded-lg p-4 shadow-md delay-400!">
+            <div className="bg-primary/20 dark:bg-muted flex size-8 items-center justify-center rounded-md">
+              <Bookmark className="text-muted-foreground fill-background size-5 dark:fill-teal-800" />
             </div>
             <div className="flex-1">
               <div className="text-sm font-medium">Next.js Guide</div>
@@ -70,7 +69,7 @@ export const HeroSection = async () => {
             </div>
             <Check className="text-muted-foreground size-5" />
           </div>
-        </Card>
+        </div>
       </div>
     </section>
   );

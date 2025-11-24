@@ -17,7 +17,13 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookmarkSkeleton } from "./skeletons/bookmark.skeleton";
 
-export const BookmarkCard = ({ bookmark }: { bookmark: TBookmark }) => {
+export const BookmarkCard = ({
+  bookmark,
+  style,
+}: {
+  bookmark: TBookmark;
+  style?: React.CSSProperties;
+}) => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [isPending, setIsPending] = useState(false);
 
@@ -34,7 +40,7 @@ export const BookmarkCard = ({ bookmark }: { bookmark: TBookmark }) => {
 
   return (
     <>
-      <article className="relative grid min-h-[272px]">
+      <article className="animate-fade-in-blur relative grid min-h-[272px]" style={style}>
         <Card className="grow gap-4 border-none pt-4 pb-3">
           <div className="px-4">
             <CardHeader className="border-muted flex flex-row gap-3 border-b px-0">
