@@ -20,14 +20,16 @@ export async function SignInDemoUser() {
         password: "12345678",
       },
     });
+    return { success: true };
   } catch (error) {
     console.error("Error signing in demo user:", error);
     if (error instanceof APIError) {
-      throw new Error(`Failed to sign in demo user: ${error.message}`);
+      return { success: false, error: `Failed to sign in demo user: ${error.message}` };
     } else {
-      throw new Error("An unexpected error occurred while signing in the demo user.");
+      return {
+        success: false,
+        error: "An unexpected error occurred while signing in the demo user.",
+      };
     }
   }
-
-  redirect("/dashboard");
 }
