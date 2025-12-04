@@ -50,6 +50,7 @@ export const FeatureSection = () => {
               "rounded-2xl border-2 border-transparent p-5 transition-all duration-300",
               "hover:border-ring/50 hover:-translate-y-2 hover:shadow-xl",
               "active:border-ring/50 active:-translate-y-2 active:shadow-xl",
+              "animate-fade-in-blur",
             )}
           >
             <div

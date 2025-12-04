@@ -7,8 +7,8 @@ import { useDashboard } from "../../dashboard.context";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export function SideSheetTags() {
   const { getParam, updateURL } = useUrlState();
@@ -22,14 +22,14 @@ export function SideSheetTags() {
 
   const handleTagChange = (tag: string, checked: CheckedState) => {
     const currentTags = selectedTags;
-    let newTags: string[];
+    let updatedTags: string[];
 
     if (checked) {
-      newTags = Array.from(new Set([...currentTags, tag]));
+      updatedTags = Array.from(new Set([...currentTags, tag]));
     } else {
-      newTags = currentTags.filter((t) => t !== tag);
+      updatedTags = currentTags.filter((t) => t !== tag);
     }
-    updateURL({ tags: newTags.length > 0 ? newTags.join(",") : null, page: "1" });
+    updateURL({ tags: updatedTags.length > 0 ? updatedTags.join(",") : null, page: "1" });
   };
 
   return (
@@ -49,7 +49,7 @@ export function SideSheetTags() {
       <ScrollArea className="h-[450px] lg:h-[800px]">
         <ul className="grow">
           {loading && tags.length === 0 ? (
-            <SideTagsSkeleton count={tags.length} />
+            <SideTagsSkeleton />
           ) : tags.length === 0 ? (
             <p className="text-muted-foreground mt-4 text-center text-xs font-medium">
               No tags found. <br /> Your tags will appear here once you create a bookmark.
@@ -87,10 +87,10 @@ export function SideSheetTags() {
   );
 }
 
-const SideTagsSkeleton = ({ count }: { count: number }) => (
+const SideTagsSkeleton = () => (
   <ScrollArea className="h-[450px] lg:h-[800px]">
     <div className="space-y-1">
-      {Array.from({ length: count }).map((_, i) => (
+      {Array.from({ length: 17 }).map((_, i) => (
         <div key={i} className="my-1 flex h-9 w-full items-center gap-2 rounded-md">
           <Skeleton className="size-5 rounded" />
           <Skeleton className="h-4 grow" />
