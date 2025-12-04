@@ -39,7 +39,7 @@ export const HeroSection = async () => {
         </div>
 
         <div className="bg-card grid gap-4 self-end overflow-hidden rounded-2xl p-5 shadow-xl">
-          <div className="bg-accent animate-fade-in-blur flex items-center gap-3 rounded-lg p-4 shadow-md">
+          <div className="bg-accent flex items-center gap-3 rounded-lg p-4 shadow-md">
             <div className="bg-primary/20 dark:bg-muted flex size-8 items-center justify-center rounded-md">
               <Bookmark className="text-muted-foreground fill-background size-5 dark:fill-teal-800" />
             </div>
@@ -49,7 +49,7 @@ export const HeroSection = async () => {
             </div>
             <Check className="text-muted-foreground size-5" />
           </div>
-          <div className="bg-accent animate-fade-in-blur flex items-center gap-3 rounded-lg p-4 shadow-md delay-200!">
+          <div className="bg-accent flex items-center gap-3 rounded-lg p-4 shadow-md delay-200!">
             <div className="bg-primary/20 dark:bg-muted flex size-8 items-center justify-center rounded-md">
               <Bookmark className="text-muted-foreground fill-background size-5 dark:fill-teal-800" />
             </div>
@@ -59,7 +59,7 @@ export const HeroSection = async () => {
             </div>
             <Check className="text-muted-foreground size-5" />
           </div>
-          <div className="bg-accent animate-fade-in-blur flex items-center gap-3 rounded-lg p-4 shadow-md delay-400!">
+          <div className="bg-accent flex items-center gap-3 rounded-lg p-4 shadow-md delay-400!">
             <div className="bg-primary/20 dark:bg-muted flex size-8 items-center justify-center rounded-md">
               <Bookmark className="text-muted-foreground fill-background size-5 dark:fill-teal-800" />
             </div>

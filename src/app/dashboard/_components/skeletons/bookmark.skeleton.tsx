@@ -1,11 +1,8 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-export const BookmarkSkeleton = ({ style }: { style?: React.CSSProperties }) => {
+export const BookmarkSkeleton = () => {
   return (
-    <div
-      className="bg-card animate-fade-in-blur grid min-h-[272px] overflow-hidden rounded-xl"
-      style={style}
-    >
+    <div className="bg-card grid min-h-[272px] overflow-hidden rounded-xl">
       {/* Header */}
       <div className="border-border flex items-center justify-between gap-3 border-b p-4">
         <Skeleton className="aspect-square size-10" />
