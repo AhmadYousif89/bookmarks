@@ -3,7 +3,7 @@
 import Form from "next/form";
 import { useActionState, useEffect, useState } from "react";
 
-import { PasswordField, updateUserPassword } from "../actions";
+import { type PasswordField, updateUserPassword } from "../actions";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ActionButton } from "@/components/action.button";
@@ -25,7 +25,7 @@ const initialState = {
 
 export function SecurityTab({ isDemo }: { isDemo: boolean }) {
   const [state, action, pending] = useActionState(
-    (pv: unknown, data: FormData) => updateUserPassword(data),
+    (_: unknown, data: FormData) => updateUserPassword(data),
     initialState,
   );
 

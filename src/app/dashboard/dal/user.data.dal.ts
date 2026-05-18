@@ -4,11 +4,11 @@ import { headers } from "next/headers";
 import { auth } from "@/app/(auth)/lib/auth";
 import { parseSearchParams } from "../_lib/search-params";
 import {
-  BookamrksResult,
+  type BookamrksResult,
   getBookmarkCounts,
   getBookmarkTags,
   getBookmarks,
-  TagData,
+  type TagData,
 } from "./bookmarks.dal";
 
 export const DB_PAGE_LIMIT = 9;

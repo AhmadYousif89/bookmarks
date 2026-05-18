@@ -2,9 +2,9 @@ import { Suspense } from "react";
 
 import { DB_PAGE_LIMIT, getUserData } from "../dal/user.data.dal";
 import { DashboardTitle } from "../_components/title.h1";
-import { SortMenu } from "../_components/header/sort.menu";
-import { BookmarksPanel } from "../_components/bookmark.panel";
-import { BookmarkGridSkeleton } from "../_components/skeletons/grid.skeleton";
+import { SortMenu } from "../header/sort.menu";
+import { BookmarksPanel } from "../bookmark/bookmark.panel";
+import { BookmarkGridSkeleton } from "../skeletons/grid.skeleton";
 
 export default async function ArchivedPage({ searchParams }: PageProps<"/dashboard/archived">) {
   const sp = await searchParams;

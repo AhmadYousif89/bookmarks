@@ -14,7 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { authClient, Session } from "@/app/(auth)/lib/auth.client";
+import { authClient, type Session } from "@/app/(auth)/lib/auth.client";
 import { UserLockIcon } from "@/components/user-lock";
 
 type FormState = {

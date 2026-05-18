@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { Upload, X } from "lucide-react";
 
-import { Session } from "@/app/(auth)/lib/auth.client";
+import type { Session } from "@/app/(auth)/lib/auth.client";
 import { uploadUserAvatar } from "../actions";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 export const ProfileHeader = ({ user }: { user: Session["user"] }) => {
   const router = useRouter();
   const [state, action, isPending] = useActionState(
-    (pv: unknown, data: FormData) => uploadUserAvatar(data),
+    (_: unknown, data: FormData) => uploadUserAvatar(data),
     { success: false, message: "" },
   );
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -34,12 +34,14 @@ export const ProfileHeader = ({ user }: { user: Session["user"] }) => {
       lastImageRef.current = null;
       return;
     }
+
     if (imageUrl && lastImageRef.current === imageUrl) return;
     if (message) toastAction({ label: message, icon: "check" });
+
     lastImageRef.current = imageUrl ?? null;
     setImageFile(null);
     router.refresh();
-  }, [state]);
+  }, [state, router]);
 
   return (
     <Card className="min-h-26 flex-row items-center justify-between gap-4 border-none p-4 shadow-none md:p-6">
@@ -120,7 +122,7 @@ export const UserImagePicker = ({ name, image, inputName, onFileSelected }: Prop
 
   useEffect(() => {
     return () => {
-      if (preview && preview.startsWith("blob:")) URL.revokeObjectURL(preview);
+      if (preview?.startsWith("blob:")) URL.revokeObjectURL(preview);
     };
   }, [preview]);
 
@@ -157,7 +159,7 @@ export const UserImagePicker = ({ name, image, inputName, onFileSelected }: Prop
     const url = URL.createObjectURL(file);
 
     setPreview((prev) => {
-      if (prev && prev.startsWith("blob:")) URL.revokeObjectURL(prev);
+      if (prev?.startsWith("blob:")) URL.revokeObjectURL(prev);
       return url;
     });
 
@@ -166,7 +168,7 @@ export const UserImagePicker = ({ name, image, inputName, onFileSelected }: Prop
 
   const handleClearPreview = () => {
     setPreview((prev) => {
-      if (prev && prev.startsWith("blob:")) URL.revokeObjectURL(prev);
+      if (prev?.startsWith("blob:")) URL.revokeObjectURL(prev);
       return image || null;
     });
     onFileSelected?.(null);
@@ -175,7 +177,7 @@ export const UserImagePicker = ({ name, image, inputName, onFileSelected }: Prop
 
   return (
     <div className="bg-primary dark:bg-accent relative flex size-10 items-center justify-center rounded-full">
-      {preview && preview.startsWith("blob:") && (
+      {preview?.startsWith("blob:") && (
         <Button
           type="button"
           size="auto"

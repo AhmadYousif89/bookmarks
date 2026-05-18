@@ -1,9 +1,9 @@
 import { headers } from "next/headers";
 import { auth } from "@/app/(auth)/lib/auth";
 
-import { SearchForm } from "./header/search.form";
+import { SearchForm } from "../header/search.form";
 import { AddBookmarkModal } from "./create.modal";
-import { UserAvatarMenu } from "./header/user.menu";
+import { UserAvatarMenu } from "../header/user.menu";
 import { UserBadge } from "@/components/user.badge";
 
 export const DashboardHeader = async () => {

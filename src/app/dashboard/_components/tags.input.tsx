@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 
 import { cn } from "@/lib/utils";
-import { TBookmark } from "@/lib/types";
+import type { TBookmark } from "@/lib/types";
 import { PREDEFINED_TAGS } from "../_lib/config";
 
 import {
@@ -54,7 +54,7 @@ export const TagsInput = ({
   // Sync internal state when parent-provided tags change (e.g., after a failed submit)
   useEffect(() => {
     setSelectedTags(value);
-  }, [JSON.stringify(value)]);
+  }, [value]);
   // Close suggestions on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -89,7 +89,7 @@ export const TagsInput = ({
       `[data-idx="${highlightedIndex}"]`,
     ) as HTMLElement | null;
     el?.scrollIntoView({ block: "nearest" });
-  }, [highlightedIndex, showSuggestions]);
+  }, [highlightedIndex]);
 
   const capacityLeft = Math.max(0, MAX_TAGS - selectedTags.length);
 

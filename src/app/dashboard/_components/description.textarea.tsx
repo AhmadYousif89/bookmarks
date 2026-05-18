@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 
 import {
   InputGroup,
@@ -64,6 +64,9 @@ export const DescriptionTextarea = ({
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
+          <title>
+            {charCount}/{MAX_DESCRIPTION_LENGTH} characters
+          </title>
           <path d="M10 2L2 10" stroke="#DDE9E7" strokeLinecap="round" />
           <path d="M11 7L7 11" stroke="#DDE9E7" strokeLinecap="round" />
         </svg>

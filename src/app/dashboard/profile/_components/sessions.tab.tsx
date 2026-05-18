@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Session } from "better-auth";
+import type { Session } from "better-auth";
 import { UAParser } from "ua-parser-js";
 import { useRouter } from "next/navigation";
 import { LogOut, Trash2 } from "lucide-react";
@@ -207,6 +207,7 @@ const Smartphone = () => (
     width="24px"
     className="fill-muted-foreground"
   >
+    <title>Smartphone Icon</title>
     <path d="M280-40q-33 0-56.5-23.5T200-120v-720q0-33 23.5-56.5T280-920h400q33 0 56.5 23.5T760-840v124q18 7 29 22t11 34v80q0 19-11 34t-29 22v404q0 33-23.5 56.5T680-40H280Zm0-80h400v-720H280v720Zm0 0v-720 720Zm200-600q17 0 28.5-11.5T520-760q0-17-11.5-28.5T480-800q-17 0-28.5 11.5T440-760q0 17 11.5 28.5T480-720Z" />
   </svg>
 );
@@ -219,6 +220,7 @@ const Monitor = () => (
     width="24px"
     className="fill-muted-foreground"
   >
+    <title>Monitor Icon</title>
     <path d="M320-360h320v-22q0-45-44-71.5T480-480q-72 0-116 26.5T320-382v22Zm160-160q33 0 56.5-23.5T560-600q0-33-23.5-56.5T480-680q-33 0-56.5 23.5T400-600q0 33 23.5 56.5T480-520ZM320-120v-80H160q-33 0-56.5-23.5T80-280v-480q0-33 23.5-56.5T160-840h640q33 0 56.5 23.5T880-760v480q0 33-23.5 56.5T800-200H640v80H320ZM160-280h640v-480H160v480Zm0 0v-480 480Z" />
   </svg>
 );

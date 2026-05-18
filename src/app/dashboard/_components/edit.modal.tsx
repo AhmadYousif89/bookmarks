@@ -1,5 +1,5 @@
 import { TBookmark } from "@/lib/types";
-import { BookmarkModal } from "./bookmark.dialog";
+import { BookmarkModal } from "../bookmark/bookmark.dialog";
 import { editBookmarkAction } from "../actions/update";
 
 type Props = {

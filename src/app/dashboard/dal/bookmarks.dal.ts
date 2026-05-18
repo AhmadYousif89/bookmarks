@@ -3,12 +3,12 @@ import "server-only";
 import { ObjectId } from "mongodb";
 import { headers } from "next/headers";
 import { cacheLife, cacheTag } from "next/cache";
-import { FilterQuery, PipelineStage } from "mongoose";
+import type { FilterQuery, PipelineStage } from "mongoose";
 
 import { Bookmark } from "@/lib/model";
-import { TBookmark } from "@/lib/types";
+import type { TBookmark } from "@/lib/types";
 import { auth } from "@/app/(auth)/lib/auth";
-import { DashboardSearchParams } from "../_lib/search-params";
+import type { DashboardSearchParams } from "../_lib/search-params";
 import { DB_PAGE_LIMIT } from "./user.data.dal";
 
 type BookmarkFilterParams = {

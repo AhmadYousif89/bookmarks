@@ -6,7 +6,7 @@ import { auth } from "../(auth)/lib/auth";
 import { DashboardHeader } from "./_components/header";
 import { SessionGuard } from "./session-guard";
 import { DashboardProvider } from "./dashboard.context";
-import { SideSheet } from "./_components/sidebar/side.sheet";
+import { SideSheet } from "./sidebar/side.sheet";
 
 export const metadata: Metadata = {
   title: "Dashboard - Bookmark Manager",

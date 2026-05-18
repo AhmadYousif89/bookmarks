@@ -8,7 +8,7 @@ import { normalizeUrl } from "@/lib/utils";
 import connectToDatabase from "@/lib/db";
 import { fetchFavicon } from "../_lib/util";
 import { BookmarkZodSchema } from "../_lib/schema";
-import type { FieldErrorState } from "../_components/bookmark.dialog";
+import type { FieldErrorState } from "../bookmark/bookmark.dialog";
 
 function bookmarkKey(userId: string) {
   return `[BOOKMARK]-${userId}`;
@@ -93,7 +93,7 @@ export async function editBookmarkAction(formData: FormData) {
     }
 
     // Fetch favicon only when URL changes
-    let updateData: Partial<{
+    const updateData: Partial<{
       title: string;
       description: string;
       url: string;

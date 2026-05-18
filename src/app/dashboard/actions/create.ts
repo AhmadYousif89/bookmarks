@@ -11,7 +11,7 @@ import { normalizeUrl } from "@/lib/utils";
 import connectToDatabase from "@/lib/db";
 import { fetchFavicon } from "../_lib/util";
 import { BookmarkZodSchema } from "../_lib/schema";
-import type { FieldErrorState } from "../_components/bookmark.dialog";
+import type { FieldErrorState } from "../bookmark/bookmark.dialog";
 
 export async function createBookmarkAction(formData: FormData) {
   const rawData = {

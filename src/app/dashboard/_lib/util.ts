@@ -32,7 +32,7 @@ export async function fetchFavicon(url: string) {
             if (href.endsWith(".ico")) score += 10;
             if (sizes === "any") score += 60;
             const n = parseInt(sizes.split("x")[0] || "0", 10);
-            score += isNaN(n) ? 0 : n; // bigger is better
+            score += Number.isNaN(n) ? 0 : n; // bigger is better
             if ($(el).attr("rel")?.toLowerCase().includes("apple-touch")) score += 80;
             return { href, score };
           })
@@ -100,7 +100,7 @@ function hexToRgb(hex: string): RGB {
 }
 
 function rgbToHex({ r, g, b }: RGB): string {
-  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1); // convert decimal to hex
+  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`; // convert decimal to hex
 }
 
 function interpolateColor(color1: string, color2: string, factor: number): string {
