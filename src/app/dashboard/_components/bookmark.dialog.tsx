@@ -1,9 +1,9 @@
 "use client";
 
 import Form from "next/form";
-import { useActionState, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useActionState, useCallback, useEffect, useRef, useState } from "react";
 
-import { TBookmark } from "@/lib/types";
+import type { TBookmark } from "@/lib/types";
 import {
   Dialog,
   DialogClose,
@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Icon } from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
+import { UserLockIcon } from "@/components/user-lock";
 import { toastAction } from "@/components/toast-action";
 import { ActionButton } from "@/components/action.button";
 import { FieldSet, FieldGroup } from "@/components/ui/field";
@@ -23,10 +24,9 @@ import { UrlInput } from "./url.input";
 import { TagsInput } from "./tags.input";
 import { TitleInput } from "./title.input";
 import { useDashboard } from "../dashboard.context";
-import { GeneratedAIData } from "../actions/generate-metadata";
-import { GenerateMetadataForm } from "./generate-metadata.form";
 import { useSession } from "@/app/(auth)/lib/auth.client";
-import { UserLockIcon } from "@/components/user-lock";
+import { GenerateMetadataForm } from "./generate-metadata.form";
+import type { GeneratedAIData } from "../actions/ai/generate-metadata.types";
 
 type FieldNames = "title" | "description" | "url" | "tags";
 export type FieldErrorState = Partial<Record<FieldNames | "message", string>>;

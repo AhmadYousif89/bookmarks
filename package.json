@@ -10,7 +10,6 @@
     "type": "git"
   },
   "scripts": {
-    "postbuild": "dotenv -e .env -- node ./src/scripts/warmup-hf.js",
     "predev": "node ./src/scripts/generate-icons.cjs",
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
@@ -56,6 +55,7 @@
     "@types/node": "^20.19.23",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
+    "baseline-browser-mapping": "^2.10.30",
     "dotenv-cli": "^11.0.0",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.7.1",

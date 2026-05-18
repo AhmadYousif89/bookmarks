@@ -1,7 +1,6 @@
 # Bookmark Manager App
 
-A full‑stack bookmark manager built with Next.js 16+.  
-Users can sign up, manage their bookmarks, organize them with tags, and switch between light/dark themes.
+A full‑stack bookmark manager application where users can create an account, manage their bookmarks with metadata, and view them in a dashboard with light/dark themes.
 
 This project is based on the [Frontend Mentor - Bookmark manager app challenge](https://www.frontendmentor.io/challenges/bookmark-manager-app), but implemented as a real application with authentication, a dashboard, and persistent storage.
 

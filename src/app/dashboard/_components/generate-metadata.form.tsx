@@ -6,7 +6,6 @@ import { useActionState, useEffect, useState } from "react";
 import { Icon } from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
 import { ActionButton } from "@/components/action.button";
-import { generateBookmarkMetadata, GeneratedAIData } from "../actions/generate-metadata";
 import { Field, FieldLabel, FieldError } from "@/components/ui/field";
 import {
   InputGroup,
@@ -14,6 +13,8 @@ import {
   InputGroupAddon,
   InputGroupButton,
 } from "@/components/ui/input-group";
+import type { GeneratedAIData } from "../actions/ai/generate-metadata.types";
+import { generateBookmarkMetadata } from "../actions/generate-metadata";
 
 type Props = {
   onSuccess?: (data: GeneratedAIData) => void;
@@ -33,7 +34,7 @@ const initialState: FormState = { success: false };
 
 export const GenerateMetadataForm = ({ closeAiForm, onSuccess, onError }: Props) => {
   const [state, action, isPending] = useActionState(
-    (pvState: FormState, data: FormData) => generateBookmarkMetadata(data),
+    (_: FormState, data: FormData) => generateBookmarkMetadata(data),
     initialState,
   );
   const [localError, setLocalError] = useState("");
@@ -72,6 +73,7 @@ export const GenerateMetadataForm = ({ closeAiForm, onSuccess, onError }: Props)
             required
             id="ai-url"
             name="url"
+            autoFocus
             autoComplete="off"
             placeholder="https://"
             onChange={onClearError}
