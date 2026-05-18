@@ -1,8 +1,8 @@
 "use client";
 
-import { CheckedState } from "@radix-ui/react-checkbox";
+import { useDashboard } from "../dashboard.context";
 import { useUrlState } from "@/app/hooks/use-url-state";
-import { useDashboard } from "../../dashboard.context";
+import type { CheckedState } from "@radix-ui/react-checkbox";
 
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -90,8 +90,8 @@ export function SideSheetTags() {
 const SideTagsSkeleton = () => (
   <ScrollArea className="h-[450px] lg:h-[800px]">
     <div className="space-y-1">
-      {Array.from({ length: 17 }).map((_, i) => (
-        <div key={i} className="my-1 flex h-9 w-full items-center gap-2 rounded-md">
+      {Array.from({ length: 17 }, (_, i) => `sidetag-skeleton-${i + 1}`).map((k) => (
+        <div key={k} className="my-1 flex h-9 w-full items-center gap-2 rounded-md">
           <Skeleton className="size-5 rounded" />
           <Skeleton className="h-4 grow" />
           <Skeleton className="aspect-square size-6 rounded-full" />

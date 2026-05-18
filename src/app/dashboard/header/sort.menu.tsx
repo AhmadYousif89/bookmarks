@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { ArrowDown, ArrowUp } from "lucide-react";
-import { sortBy, sortMap } from "../../_lib/config";
+import { sortBy, sortMap } from "../_lib/config";
 import { useUrlState } from "@/app/hooks/use-url-state";
 
 import {

@@ -3,11 +3,11 @@
 import { Fragment, memo } from "react";
 
 import { toast } from "sonner";
-import { LockKeyhole } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { TBookmark } from "@/lib/types";
-import { AvailableIconNames } from "@/lib/icon.generated";
-import { Item, ItemLabel, ItemLabelKeys, ITEMS } from "../_lib/config";
+import type { TBookmark } from "@/lib/types";
+import type { AvailableIconNames } from "@/lib/icon.generated";
+import type { Item, ItemLabel, ItemLabelKeys } from "../_lib/config";
+import { ITEMS } from "../_lib/config";
 
 import {
   DropdownMenu,

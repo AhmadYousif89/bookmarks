@@ -9,7 +9,7 @@ import { Icon } from "@/components/ui/icon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useDashboard } from "../../dashboard.context";
+import { useDashboard } from "../dashboard.context";
 
 const LINKS = [
   { name: "Active", href: "/dashboard", icon: "home" },

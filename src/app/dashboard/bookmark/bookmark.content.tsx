@@ -9,7 +9,7 @@ import { Icon } from "@/components/ui/icon";
 import { AddBookmarkModal } from "../_components/create.modal";
 import { BookmarkIcon } from "@/components/logo";
 import { BookmarkCard } from "./bookmark.card";
-import { TBookmark } from "@/lib/types";
+import type { TBookmark } from "@/lib/types";
 
 type Props = {
   data: TBookmark[];

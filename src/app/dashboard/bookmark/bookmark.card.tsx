@@ -3,19 +3,19 @@
 import Link from "next/link";
 import { useCallback, useState } from "react";
 
-import { TBookmark } from "@/lib/types";
+import type { TBookmark } from "@/lib/types";
 import { cn, formatDate } from "@/lib/utils";
 
-import { EditBookmarkModal } from "./edit.modal";
 import { updateVisitCount } from "../actions/update";
-import { BookmarkSettingsMenu } from "./bookmark-settings.menu";
+import { BookmarkSettingsMenu } from "./bookmark.menu";
 import { Icon } from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookmarkSkeleton } from "./skeletons/bookmark.skeleton";
+import { BookmarkSkeleton } from "../skeletons/bookmark.skeleton";
+import { EditBookmarkModal } from "../_components/edit.modal";
 
 export const BookmarkCard = ({
   bookmark,
@@ -158,7 +158,13 @@ export const BookmarkCard = ({
         </Card>
       </article>
 
-      <EditBookmarkModal bookmark={bookmark} open={editModalOpen} onOpenChange={handleModalState} />
+      {editModalOpen && (
+        <EditBookmarkModal
+          bookmark={bookmark}
+          open={editModalOpen}
+          onOpenChange={handleModalState}
+        />
+      )}
     </>
   );
 };

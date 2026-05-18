@@ -1,12 +1,10 @@
 "use client";
 
-import React from "react";
-
 import {
   Pagination,
+  PaginationItem,
   PaginationContent,
   PaginationEllipsis,
-  PaginationItem,
 } from "@/components/ui/pagination";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -18,7 +16,7 @@ type Props = {
   totalPages: number;
 };
 
-export const BookmarkPaginations: React.FC<Props> = ({ page, totalPages }) => {
+export const BookmarkPaginations = ({ page, totalPages }: Props) => {
   const { updateURL } = useUrlState();
   if (!totalPages || totalPages <= 1 || page > totalPages) return null;
 
