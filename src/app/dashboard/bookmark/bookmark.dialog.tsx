@@ -4,6 +4,7 @@ import Form from "next/form";
 import { useActionState, useCallback, useEffect, useRef, useState } from "react";
 
 import type { TBookmark } from "@/lib/types";
+import type { GeneratedAIData } from "../actions/ai/generate-metadata.types";
 import {
   Dialog,
   DialogClose,
@@ -15,13 +16,11 @@ import {
 } from "@/components/ui/dialog";
 import { Icon } from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
-import { UserLockIcon } from "@/components/user-lock";
 import { toastAction } from "@/components/toast-action";
 import { ActionButton } from "@/components/action.button";
 import { FieldSet, FieldGroup } from "@/components/ui/field";
 import { useDashboard } from "../dashboard.context";
 import { useSession } from "@/app/(auth)/lib/auth.client";
-import type { GeneratedAIData } from "../actions/ai/generate-metadata.types";
 import { GenerateMetadataForm } from "../_components/generate-metadata.form";
 import { DescriptionTextarea } from "../_components/description.textarea";
 import { TitleInput } from "../_components/title.input";
@@ -174,8 +173,13 @@ export const BookmarkModal = ({
       )}
       <DialogContent className="bg-card gap-8 rounded-2xl px-5 py-6 md:p-8">
         <DialogHeader>
-          <DialogTitle className="text-xl leading-8.5 font-bold">
+          <DialogTitle className="flex items-center justify-between gap-2 text-xl leading-8.5 font-bold">
             {showAiForm ? "Generate with AI" : isEdit ? "Edit Bookmark" : "Add Bookmark"}
+            {!showAiForm && (
+              <Button variant="link" size="auto" onClick={() => setShowAiForm(true)}>
+                Try with AI 🤖
+              </Button>
+            )}
           </DialogTitle>
           <DialogDescription className="flex items-center justify-between gap-2">
             <span>
@@ -185,11 +189,6 @@ export const BookmarkModal = ({
                   ? "Update your saved link details — change the title, description, URL, or tags anytime."
                   : "Save a link with details to keep your collection organized."}
             </span>
-            {!isEdit && !showAiForm && (
-              <Button variant="link" size="auto" onClick={() => setShowAiForm(true)}>
-                Try with AI 🤖
-              </Button>
-            )}
           </DialogDescription>
         </DialogHeader>
         {showAiForm ? (
@@ -252,9 +251,8 @@ export const BookmarkModal = ({
                   Cancel
                 </Button>
               </DialogClose>
-              <ActionButton type="submit" isPending={isPending} disabled={isDemo || isPending}>
+              <ActionButton type="submit" isPending={isPending} disabled={isPending}>
                 {isEdit ? "Edit Bookmark" : "Add Bookmark"}
-                {isDemo && <UserLockIcon className="text-foreground p-1" />}
               </ActionButton>
             </div>
           </Form>
