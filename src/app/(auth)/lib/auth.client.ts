@@ -12,11 +12,19 @@ export type Session = typeof authClient.$Infer.Session;
 export const useSession = () => authClient.useSession();
 export const getSession = async () => await authClient.getSession();
 export const getSessions = async () => await authClient.listSessions();
-export const signOut = () =>
-  authClient.signOut({
-    fetchOptions: {
-      onSuccess: () => {
-        window.location.href = "/";
-      },
-    },
-  });
+export const signOut = async () => {
+  try {
+    const { data, error } = await authClient.signOut();
+
+    if (error) {
+      console.error("Failed to sign out:", error);
+      return;
+    }
+
+    if (data?.success) {
+      window.location.assign("/");
+    }
+  } catch (error) {
+    console.error("Failed to sign out:", error);
+  }
+};
