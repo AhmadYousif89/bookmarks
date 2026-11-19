@@ -8,9 +8,10 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export const sendEmail = async (user: User, url: string) => {
   const html = await render(<VerfiEmailTemplate user={user} url={url} />);
   const text = await render(<VerfiEmailTemplate user={user} url={url} />, { plainText: true });
+  const emailDomain = process.env.EMAIL_DOMAIN;
 
   await resend.emails.send({
-    from: "verify@ayob.dev",
+    from: `verify@${emailDomain}`,
     to: user.email,
     subject: "Verify your Bookmark Manager account",
     html,
